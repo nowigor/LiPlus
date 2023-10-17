@@ -1,8 +1,6 @@
 # Projekt LiPlus: Automatyzacja Domu i Szkoły
 
-## Nazwa Projektu: LiPlus
-
-### Opis
+## Opis
 
 LiPlus to innowacyjny projekt, który integruje się z systemem edukacyjnym Librus, mający na celu usprawnienie zarządzania codziennym życiem szkolnym uczniów. LiPlus to zaawansowane API oraz platforma internetowa oparta na technologii React, umożliwiająca szybki dostęp do kluczowych informacji związanych z frekwencją, ocenami oraz planem zajęć szkolnych.
 
