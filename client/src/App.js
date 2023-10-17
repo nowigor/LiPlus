@@ -6,6 +6,7 @@ import "./Styles/style.css"
 
 const serverPort = "3030";
 const preURL = "http://localhost:" + serverPort;
+// const preURL = "http://http://ip:" + serverPort;
 
 
 const App = () => {
