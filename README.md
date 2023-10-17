@@ -51,6 +51,6 @@ LiPlus to innowacyjny projekt, który integruje się z systemem edukacyjnym Libr
 
 ## Autorzy
 
-- [Tomasz Siedlecki](https://github.com/nowigor)
-- [Damian Tymofijewicz](https://github.com/green-otaku)
 - [Tomasz Siedlecki](https://github.com/tomekSiedlecki)
+- [Damian Tymofijewicz](https://github.com/green-otaku)
+- [Igor Nowak](https://github.com/nowigor)
