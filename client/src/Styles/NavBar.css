@@ -1,0 +1,13 @@
+.wrapper
+{
+    width: 80%;
+    background-color: rgb(172, 117, 55);
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+.navItem
+{
+    background-color: red;
+}
