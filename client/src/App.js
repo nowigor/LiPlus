@@ -3,6 +3,7 @@ import React, {useEffect, useState, useRef} from 'react';
 
 import MainScreen from "./MainScreen";
 import "./Styles/style.css"
+import SignIn from "./Screens/SignIn";
 
 const serverPort = "3030";
 const preURL = "http://localhost:" + serverPort;
@@ -36,18 +37,9 @@ const [tmpData, setTmpData] = useState(false)
 
   return (
     <div className="App">
-        <input type="text" ref={UserLogin}></input>
-        <input type="password" ref={UserPassword}></input>
-      <button onClick={SendUserData}>Zaloguj</button>
+       <SignIn></SignIn>
       {/* <MainScreen></MainScreen> */}
-      {console.log("TU", tmpData)}
-      { tmpData &&
-       tmpData.map((e)=>{
-        return(
-          <div>{e.name}</div>
-        )
-       })
-      }
+     
     </div>
   );
 }

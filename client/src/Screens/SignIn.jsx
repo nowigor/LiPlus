@@ -1,6 +1,7 @@
 import React, {useState, useRef} from 'react';
 import consts from '../Includes/consts';
 import axios from 'axios';
+import "../Styles/SignIn.css"
 const SignIn = () =>
 {
     const [tmpData, setTmpData] = useState(false)
@@ -18,7 +19,8 @@ const SignIn = () =>
     }
     }
     return(
-        <section>
+        <section class = "box">
+            <p>cso</p>
             <input type="text" ref={UserLogin}></input>
             <input type="password" ref={UserPassword}></input>
             <button onClick={SendUserData}>Zaloguj</button>

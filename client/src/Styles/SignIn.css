@@ -1,0 +1,8 @@
+.box
+{
+    background-image: url("../Includes/wave.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+    background-color: goldenrod;
+}
