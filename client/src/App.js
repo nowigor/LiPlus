@@ -2,6 +2,7 @@ import axios from "axios";
 import React, {useEffect, useState, useRef} from 'react';
 import MainScreen from "./MainScreen";
 import "./Styles/style.css"
+import SignIn from "./Screens/SignIn";
 
 const serverPort = "3030";
 const preURL = "http://localhost:" + serverPort;
@@ -46,8 +47,8 @@ const [tmpData, setTmpData] = useState(false)
 
   return (
     <div className="App">
-        <input type="text" ref={UserLogin}></input>
-        <input type="password" ref={UserPassword}></input>
+       <input type="text" ref={UserLogin}></input>
+       <input type="password" ref={UserPassword}></input>
       <button onClick={LogIn}>Zaloguj</button>
       <button onClick={LogOut}>Wyloguj się</button>
       <button onClick={getTimetable}>Get timetable</button>
