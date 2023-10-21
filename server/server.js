@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const Librus = require("librus-api");
 const cheerio = require('cheerio');
 
+const {getTimetable} = require('./Utils/getTimetable');
+
 const app = express();
 app.use(cors());
 const client = new Librus();
@@ -12,112 +14,75 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(express.json());
 
+//@ +++++++ SERVER INFO ++++++++
 const PORT = process.env.PORT || 3030;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+//@ +++++++ END SERVER INFO ++++++++
 
-let login = null;
-let password = null;
-app.post('/user', (req, res) =>
+
+
+//? ======= ROUTES ========
+app.post('/user/auth/login', (req, res) =>
 {
   const {UserLogin, UserPassword} = req.body;
-  login = UserLogin;
-  password = UserPassword;
-  authorize(res);
+  UserAuth(res,UserLogin, UserPassword);
+  
+});
+app.post('/user/auth/logut', (req, res) =>
+{
+  //! TODO
+  // Zrobić sposób na wylogowanie bo taki nie działa 
+  UserAuth(res, "fake", "fake");
 });
 
-const getTimetable = (from, to, client) => {
-  const days = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ]
-
-  const parser = data => {
-    const $ = cheerio.load(data)
-
-    const html_table = $('table.decorated.plan-lekcji')
-    if (!html_table) {
-      return null
-    }
-
-    const hours = []
-    const table = Object.fromEntries(days.map(day => [day, []]))
-
-    html_table.find('tr.line1')
-      .each((idx, row) => {
-        hours.push($(row).find('th').trim())
-
-        $(row).find('td.line1').each((i, cell) => {
-          const title = $(cell).find(".text").trim() || $(cell).trim()
-          const insideData = {
-            firstField: null,
-            secondField: null,
-          }
-
-          const hasFlag = $(cell).find("s").length === 4
-          if (hasFlag) {
-            const firstField = {
-              flag:
-                $(cell).children().eq(1).trim() ||
-                $(cell).children().eq(1).first().trim(),
-              title: $(cell).find(".text").first().trim(),
-            }
-
-            const secondField = {
-              flag:
-                $(cell).children().eq(3).trim() ||
-                $(cell).children().eq(3).first().trim(),
-              title: $(cell).find(".text").last().trim(),
-            };
-
-            insideData.firstField = firstField;
-            insideData.secondField =
-              $(cell).find(".text").length > 1 ? secondField : null;
-          }
-
-          const key = days[i]
-          table[key].push(!title ? null : {
-            title,
-            flag:
-              $(cell).find(".center.plan-lekcji-info.tooltip").trim() ||
-              $(cell).find(".center.plan-lekcji-info").trim(),
-            insideFields: insideData
-          })
-          
-        })
-      })
-    
-    return {
-      hours,
-      table
-    }
-  }
-
-  return client._request("post",
-    "przegladaj_plan_lekcji", {
-    form: { tydzien: `${from}_${to}` }
+app.post('/api/timetable/today', (req,res)=>{
+  getTimetable("2023-10-23", "2023-10-23", client)
+  .then((data) => {
+  return res.status(201).json({ status: "success", data: data });
   })
-    .then(d => parser(d.html()))
-}
-
-const authorize = (res) =>
-{
-  client.authorize(login, password).then(function () {
-      getTimetable("2023-10-16", "2023-10-22", client).then((data) => {
-        return res.status(201).json({status: "success", data: data});
-      });
-        // client.info.getGrades().then((data) => {console.log(data[14].semester[0].grades)});
-  });
-}
+})
 
 
 app.get('/', (req,res)=>{
   return res.status(200).json({content: "content"});
 })
+//? ======= END ROUTES ========
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+
+
+//? ======= Handle for routes =======
+const UserAuth = (res,UserLogin, UserPassword) =>
+{
+ client.authorize(UserLogin, UserPassword)
+  .then(result =>{
+    if(result !== undefined)
+    {
+      //zalogowano pomyslnie
+        return res.status(201).json({ status: "sucess", data: "Zalogowano" });
+    }
+    else
+    {
+      //nie zalogowano
+      return res.status(401).json({ status: "error", data: "Nieudane logowanie" });
+    }
+  })
+}
+//? ======= END Handle for routes =======
+
+
+//@ HELPFULL FUNCTIONS
+const DateToday = () =>
+{
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = (today.getMonth() + 1).toString().padStart(2, '0'); // Miesiące są zero-based
+  const day = today.getDate().toString().padStart(2, '0');
+
+  const formattedDate = `${year}-${month}-${day}`;
+
+  return formattedDate
+}
+//@ END HELPFULL FUNCTIONS
+
