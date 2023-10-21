@@ -1,6 +1,5 @@
 import axios from "axios";
 import React, {useEffect, useState, useRef} from 'react';
-
 import MainScreen from "./MainScreen";
 import "./Styles/style.css"
 import SignIn from "./Screens/SignIn";
@@ -21,25 +20,38 @@ const [tmpData, setTmpData] = useState(false)
     .then(data => console.log(data))
     .catch(error=> console.log(error))
   }
-  const SendUserData = async () =>{
-    console.log(UserPassword.current.value)
+  const LogIn = async () =>{
     try {
-      const response = await axios.post(preURL + '/user', {UserLogin: UserLogin.current.value, UserPassword: UserPassword.current.value});
-      // console.log(response.data.data);
-      setTmpData(response.data.data);
+      const response = await axios.post(preURL + '/user/auth/login', {UserLogin: UserLogin.current.value, UserPassword: UserPassword.current.value});
+      console.log(response.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  const LogOut = async () =>{
+    try {
+      const response = await axios.post(preURL + '/user/auth/logut');
+      console.log(response.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  const getTimetable = async () =>{
+    try {
+      const response = await axios.post(preURL + '/api/timetable/today');
+      console.log(response.data.data);
     } catch (error) {
       console.error(error);
     }
   }
 
-
-  // getData()
-
   return (
     <div className="App">
-       <SignIn></SignIn>
-      {/* <MainScreen></MainScreen> */}
-     
+       <input type="text" ref={UserLogin}></input>
+       <input type="password" ref={UserPassword}></input>
+      <button onClick={LogIn}>Zaloguj</button>
+      <button onClick={LogOut}>Wyloguj się</button>
+      <button onClick={getTimetable}>Get timetable</button>
     </div>
   );
 }

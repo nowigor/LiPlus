@@ -1,0 +1,70 @@
+//? ==== Home Screen (w trakcie lekcjami) ====
+
+//* Zwraca 
+@ route('/api/notifications/today')
+return(
+    [
+        {id: 1, title: 'Sprawdzian', subject: 'Język Polski', topic: 'Lalka, Bolesłas Prus', description: 'opis sprawdzianu', icon: 'ikona.png'}
+        {id: 2, title: 'Sprawdzian', subject: 'Język Polski', topic: 'Lalka, Bolesłas Prus', description: 'opis sprawdzianu', icon: 'ikona.png'}
+        {id: 3, title: 'Sprawdzian', subject: 'Język Polski', topic: 'Lalka, Bolesłas Prus', description: 'opis sprawdzianu', icon: 'ikona.png'}
+    ]
+)
+@ route('/api/timetable/today')
+return(
+    [
+        {id: 6, name: 'Matematyka', class: '206', teacher: 'Lidia Skóra', from: '8:00', to: '8:45'}
+        {id: 6, name: 'Język Polski', class: '105', teacher: 'Joanna Biela', from: '8:50', to: '9:35'}
+    ]
+)
+
+@ route('/api/notifications/subject/{id}')
+return(
+    [
+        {id: 4, title: 'Sprawdzian', topic: 'null, description: 'opis sprawdzianu', icon: 'ikona.png'}
+        {id: 5, title: 'Sprawdzian', topic: 'opis, description: 'null', icon: 'ikona.png'}
+    ]
+)
+//? ==== Home Screen (po lekcjach) ====
+
+//* Zwraca
+@ route('/api/notifications/tomorrow')
+return(
+    [
+        {id: 6, title: 'Zadanie domowe z Polskiego', subject: 'Język Polski', topic: 'Lalka, Bolesłas Prus', description: 'opis sprawdzianu', icon: 'ikona.png'}
+        {id: 7, title: 'Spakuj strój na wf', subject: 'null', topic: 'null', description: 'masz jutro wf weź strój', icon: 'ikona.png'}
+        {id: 8, title: 'Nałduj laptopa', subject: 'null', topic: 'null', description: 'masz jutro wf weź strój', icon: 'ikona.png'}
+    ]
+)
+
+//* Zwraca
+@ route('/api/timetable/tomorrow')
+return(
+   [
+        {id: 6, name: 'Matematyka', class: '206', teacher: 'null', from: '8:00', to: '8:45'}
+        {id: 6, name: 'Język Polski', class: '105', teacher: 'null', from: '8:50', to: '9:35'}
+    ]
+)
+
+//? ==== Home Grades and Absence (po lekcjach) ==== 
+
+//* Zwraca
+@ route('/api/subjects/all')
+return(
+    [
+        {id: '', name: 'Programowanie aplikacji',}
+    ]
+)
+
+//* Zwraca
+@ route('/api/subject/grades/{id}')
+return(
+    [
+        {grade: 5, category: 'null', date: '29.09.2023', teacher: " ", added_by: " "}        
+        {grade: 5, category: 'null', date: '29.09.2023', teacher: " ", added_by: " "}        
+        {grade: 5, category: 'null', date: '29.09.2023', teacher: " ", added_by: " "}        
+        {grade: 5, category: 'null', date: '29.09.2023', teacher: " ", added_by: " "}        
+    ]
+)
+
+
+
