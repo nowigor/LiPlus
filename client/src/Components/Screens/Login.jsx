@@ -1,6 +1,7 @@
-import React, {seState, useRef, useState, useEffect} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import axios from "axios";
 import consts from "../../Includes/consts";
+import '../../Styles/Login.css'
 const Login = ({authorized}) =>
 {
     const UserLogin = useRef(null);
@@ -10,12 +11,12 @@ const Login = ({authorized}) =>
     
     useEffect(() => {
        AutoLogin();
-      }, []);
+      });
 
     const LogIn = async (login, password) =>{
         let result = false;
         try {
-            const response = await axios.post(consts.preURL + '/user/auth/login', {UserLogin: login, UserPassword: password});
+            await axios.post(consts.preURL + '/user/auth/login', {UserLogin: login, UserPassword: password});
             result = true;
         } 
         catch (error){}
@@ -43,7 +44,7 @@ const Login = ({authorized}) =>
     }
     const AutoLogin = async ()=>
     {
-        if(localStorage.length > 0 && await LogIn(localStorage.getItem('UserLogin'), UserPassword),localStorage.getItem('UserPassword')){
+        if(localStorage.length > 0 && await LogIn(localStorage.getItem('UserLogin'), localStorage.getItem('UserPassword'))){
             SetRender(false);
             authorized(true);
         }
@@ -52,12 +53,25 @@ const Login = ({authorized}) =>
         <>
         {render && 
         <section className="Login-Section">
-           <input type="text" ref={UserLogin}></input>
-           <input type="password" ref={UserPassword}></input>
-           <input type="checkbox" ref={rememberMe} name='rememberme'></input>
-           <label htmlFor="rememberme">Zapamiętaj mnie</label>
-          <button onClick={HandleLogin}>Zaloguj</button>
+            <div className='WaveUp'></div>
+            <div className='text-main shadow'>
+                <h1><b>Witaj w LiPlus</b></h1>
+            </div>
+            <article className='form-wrapper shadow'>
+                <input type="text" ref={UserLogin} className='input login shadow' placeholder='Nazwa użytkownika*'></input>
+                <input type="password" ref={UserPassword} className='input password shadow' placeholder='Hasło*'></input>
+                <button onClick={HandleLogin} className='button shadow'>Zaloguj</button>
+                <div className="utlis-wrapper">
+                    <span className='checkbox'>
+                        <input type="checkbox" ref={rememberMe} name='rememberme'></input>
+                        <label htmlFor="rememberme" className='text-label'>Zapamiętaj mnie</label>
+                    </span>
+                    <span className='text-forget'><a target="_blank" rel="noopener noreferrer" href='https://portal.librus.pl'>Przypomnij hasło</a></span>
+                </div>
+                <span className='text-desc'>* zaloguj się loginem i hasłem do portalu LIbrus </span>
+            </article>
           {/* <button onClick={LogOut}>Wyloguj się</button> */}
+          <div className='WaveDown'></div>
         </section>
         }
         </>

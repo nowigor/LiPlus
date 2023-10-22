@@ -1,8 +1,9 @@
 import axios from "axios";
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState} from 'react';
 import Login from "./Components/Screens/Login";
 import consts from "./Includes/consts";
-import "./Styles/style.css"
+// import "./Styles/style.css"
+import "./index.css"
 
 const App = () => {
 
