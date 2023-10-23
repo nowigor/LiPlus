@@ -1,57 +1,36 @@
 import axios from "axios";
-import React, {useEffect, useState, useRef} from 'react';
-import MainScreen from "./MainScreen";
-import "./Styles/style.css"
-import SignIn from "./Screens/SignIn";
-
-const serverPort = "3030";
-const preURL = "http://localhost:" + serverPort;
-// const preURL = "http://http://ip:" + serverPort;
-
+import React, {useEffect, useState} from 'react';
+import Login from "./Components/Screens/Login";
+import consts from "./Includes/consts";
+// import "./Styles/style.css"
+import "./index.css"
 
 const App = () => {
-const [tmpData, setTmpData] = useState(false)
-  const UserLogin = useRef(null);
-  const UserPassword = useRef(null);
-  const getData = () =>
-  {
-    fetch(preURL + "/")
-    .then(res => res.json())
-    .then(data => console.log(data))
-    .catch(error=> console.log(error))
-  }
-  const LogIn = async () =>{
-    try {
-      const response = await axios.post(preURL + '/user/auth/login', {UserLogin: UserLogin.current.value, UserPassword: UserPassword.current.value});
-      console.log(response.data.data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-  const LogOut = async () =>{
-    try {
-      const response = await axios.post(preURL + '/user/auth/logut');
-      console.log(response.data.data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+
+  const [authorize, SetAuthorize] = useState(false);
+  useEffect(() => {
+    console.log("=====")
+    console.log(localStorage)
+   }, []);
+
   const getTimetable = async () =>{
     try {
-      const response = await axios.post(preURL + '/api/timetable/today');
+      const response = await axios.post(consts.preURL + '/api/timetable/today');
       console.log(response.data.data);
     } catch (error) {
       console.error(error);
     }
+  }
+  const handleAuthorize = (status) =>{
+    if(status) SetAuthorize(status);
   }
 
   return (
     <div className="App">
-       <input type="text" ref={UserLogin}></input>
-       <input type="password" ref={UserPassword}></input>
-      <button onClick={LogIn}>Zaloguj</button>
-      <button onClick={LogOut}>Wyloguj się</button>
-      <button onClick={getTimetable}>Get timetable</button>
+      <Login authorized={(status)=> handleAuthorize(status)}/>
+      {authorize &&
+      <button onClick={getTimetable}>GetTime table</button>
+      }
     </div>
   );
 }
