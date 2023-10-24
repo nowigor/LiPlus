@@ -1,0 +1,35 @@
+.background {
+    width: auto;
+    height: 70px;
+    background-color: white;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    border-radius: 20px;
+    box-shadow: 0px 6px 16px 0 rgba(0,0,0,0.25);
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.active {
+    background-color: #B8B8B8;
+    border-radius: 20px;
+    height: 100%;
+    z-index: 1;
+    box-shadow: 0px 4px 8px 0 rgba(0,0,0,0.25);
+    transition: margin-left 0.3s;
+}
+
+.option {
+    width: max-content;
+    box-sizing: border-box;
+    height: 100%;
+    padding-left: 5px;
+    padding-right: 5px;
+    float: left;
+    display: flex;
+    place-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 14px;
+}
