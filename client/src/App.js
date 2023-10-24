@@ -5,6 +5,7 @@ import Login from "./Components/Screens/Login";
 import HomeScreen from "./Components/Screens/HomeScreen";
 import NavBar from "./Components/NavBar";
 import "./index.css"
+import { GradesAttendance } from "./Screens/GradesAttendance";
 
 const App = () => {
 
@@ -20,18 +21,19 @@ const App = () => {
   }
 
   return (
-    <>
-      <Login authorized={(status)=> handleAuthorize(status)}/>
-      {authorize &&
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<HomeScreen/>}>
-              </Route>
-            </Routes>
-          <NavBar/>
-          </BrowserRouter>
-      }
-    </>
+    // <>
+    //   <Login authorized={(status)=> handleAuthorize(status)}/>
+    //   {authorize &&
+    //       <BrowserRouter>
+    //         <Routes>
+    //           <Route path="/" element={<HomeScreen/>}>
+    //           </Route>
+    //         </Routes>
+    //       <NavBar/>
+    //       </BrowserRouter>
+    //   }
+    // </>
+    <GradesAttendance/>
   );
 }
 
