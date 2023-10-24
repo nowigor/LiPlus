@@ -1,4 +1,5 @@
 import "../../Styles/screen.css"
+import React from "react";
 
 const InfoScreen = () =>
 {

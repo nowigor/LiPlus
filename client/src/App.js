@@ -4,15 +4,14 @@ import Login from "./Components/Screens/Login";
 import NavBar from "./Components/NavBar";
 import HomeScreen from "./Components/Screens/HomeScreen";
 
-import GradesScreen from './Components/Screens/GradesHome';
+import GradesScreen from './Components/Screens/GradesScreen';
 import NewsScreen from './Components/Screens/NewsScreen';
-import SettingsScreen from './Components/Screens/SettingsHome';
-import InfoScreen from './Components/Screens/InfoHome';
+import SettingsScreen from './Components/Screens/SettingsScreen';
+import InfoScreen from './Components/Screens/InfoScreen';
 
 import "./index.css"
 
 const App = () => {
-   const dasd = [<promise></promise>]
   const [authorize, SetAuthorize] = useState(false);
   useEffect(() => {
    }, []);
