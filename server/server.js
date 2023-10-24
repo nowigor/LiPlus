@@ -48,6 +48,23 @@ app.post('/api/timetable/today', (req,res)=>{
 app.get('/', (req,res)=>{
   return res.status(200).json({content: "content"});
 })
+
+
+
+//wszystkie przedmioty
+app.post('/api/subjects/all', (req,res) => {
+  allSubjects(res);
+})
+
+app.post('/api/subject/:id', (req, res) => {
+  const subjectId = req.params.id;
+  singleSubject(subjectId, res);
+});
+
+app.post('/api/subject/grades/:id', (req, res) => {
+  const subjectId = req.params.id;
+  gradesSubjets(subjectId, res);
+});
 //? ======= END ROUTES ========
 
 
@@ -68,6 +85,53 @@ const UserAuth = (res,UserLogin, UserPassword) =>
       return res.status(401).json({ status: "error", data: "Nieudane logowanie" });
     }
   })
+}
+
+
+const allSubjects = (res) => {
+ 
+  client.homework.listSubjects().then((data) => {
+    return res.status(200).json(data);
+  });
+}
+
+const singleSubject = (id,res) => {
+
+  client.homework.listSubjects().then((data) => {
+    data.forEach((element) => {
+      if(element.id == id)
+      {
+        return res.status(200).json(element);
+      }
+    });
+    return res.status(404).json({status: "error", data: "nie ma takiego przedmiotu lub niezalogowano"});
+  });
+}
+
+
+//Funckja zwracania ocen z przedmiotu
+
+//jest problem
+//lista ocen nie zwraca id przedmiotow
+//na razie rozwiaznie tymczasowe porownywanie nazw przedmiotow
+//potem mozna zwracac z id
+const gradesSubjets = async (id, res) => {
+  const subjects = await client.homework.listSubjects();
+  let name;
+  subjects.forEach((element) => {
+    if(element.id == id)
+    {
+      name = element.name;
+    }
+  });
+  const grades = await client.info.getGrades();
+  grades.forEach((element) => {
+    if(element.name == name)
+    {
+      const subject_grades = element.semester[0].grades;
+      return res.status(200).json(subject_grades);
+    }
+  });
 }
 //? ======= END Handle for routes =======
 
