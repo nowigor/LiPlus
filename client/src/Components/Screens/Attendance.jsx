@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { ScreenSwitch } from "../ScreenSwitch";
+import { useNavigate } from "react-router-dom";
 
 export function Attendace() {
     const [active, setActive] = useState("Frekwencja")
+    const navigate = useNavigate()
+    let enabled = true
 
     const onClick = {
-        "Oceny": () => { console.log("zmieniamy na ocenki") },
-        "Frekwencja": () => { console.log("zostajemy frekwencja") }
+        "Oceny": () => navigate("/grades"),
+        "Frekwencja": () => {}
     }
 
     return (
