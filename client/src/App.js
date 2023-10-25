@@ -27,6 +27,7 @@ const App = () => {
       {authorize &&
           <BrowserRouter>
             <Routes className="cos">
+              <Route path="login" element={<Login/>}></Route>
               <Route path="/" element={<HomeScreen/>}> </Route>
               <Route path="grades" element={<GradesScreen/>}> </Route>
               <Route path="info" element={<InfoScreen/>}> </Route>

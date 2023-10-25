@@ -6,7 +6,7 @@ const SettingsIcon = (e) => {
 
     const [fillColor, setFillColor] = useState("#747474")
     useEffect(() => {
-        // setFillColor("green")
+        setFillColor(e.color)
      }, [e.color]);
   
   return (

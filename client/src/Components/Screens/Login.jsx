@@ -1,6 +1,8 @@
 import React, {useRef, useState, useEffect} from 'react';
 import axios from "axios";
+import LoadingScreen from '../LoadingScreen';
 import consts from "../../Includes/consts";
+import "../../Includes/loading/loading.gif";
 import '../../Styles/Login.css'
 const Login = ({authorized}) =>
 {
@@ -37,7 +39,6 @@ const Login = ({authorized}) =>
                 {
                     localStorage.setItem('UserLogin', login);
                     localStorage.setItem('UserPassword', password);
-                    // console.log(localStorage.getItem('UserPassword'))
                 }
             }
         }
@@ -70,7 +71,6 @@ const Login = ({authorized}) =>
                 </div>
                 <span className='text-desc'>* zaloguj się loginem i hasłem do portalu LIbrus </span>
             </article>
-          {/* <button onClick={LogOut}>Wyloguj się</button> */}
           <div className='WaveDown'></div>
         </section>
         }
