@@ -8,18 +8,24 @@ export function ScreenSwitch({ options, active, setActive, onClick }) {
         marginLeft: `${(100 / options.length) * options.indexOf(active)}%`
     }
 
+    const select = e => {
+        if (active !== e) {
+            activeDiv.current.style.marginLeft = `${(100 / options.length) * options.indexOf(e)}%`
+            setTimeout(() => {
+                onClick[e]()
+                setActive(e)
+            }, 300)
+        }
+    }
+
     return (
         <div className="background">
             {
-                options.map((e, i) => {
+                options.map(e => {
                     const style = { width: `${(1 / options.length) * 100}%` }
-                    const select = () => {
-                        active = e
-                        activeDiv.current.style.marginLeft = `${(100 / options.length) * i}%`
-                    }
 
                     return (
-                        <div className='option' style={style} onClick={() => { select(); onClick[e](); }}>
+                        <div className='option' style={style} onClick={() => select(e)}>
                             <p>{e}</p>
                         </div>
                     )
