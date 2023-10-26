@@ -1,0 +1,12 @@
+.flex-wrapper
+{
+  height: 88%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.green-item
+{
+  background-color: green;
+  color: green;
+}

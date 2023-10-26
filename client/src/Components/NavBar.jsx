@@ -1,29 +1,54 @@
 import "../Styles/NavBar.css";
-import React from "react";
+import React, {useState, useRef, useEffect} from "react";
+import DesignConsts from "../Constants/DesignConsts.js";
 import {Link } from "react-router-dom";
-import home from "../Includes/icons/navigation/home.svg"
-import grades_att from "../Includes/icons/navigation/grades_att.svg"
-import info from "../Includes/icons/navigation/info.svg"
-import news from "../Includes/icons/navigation/news.svg"
-import settings from "../Includes/icons/navigation/settings.svg"
+import HomeIcon from "./Icons/HomeIcon";
+import GradesIcon from "./Icons/GradesIcon";
+import InfoIcon from "./Icons/InfoIcon";
+import NewsIcon from "./Icons/NewsIcon";
+import SettingsIcon from "./Icons/SettingsIcon";
+import designConsts from "../Constants/DesignConsts.js";
 const NavBar = () =>
 {
-  //   const getData = () =>
-  // {
-  //   fetch(preURL + "/")
-  //   .then(res => res.json())
-  //   .then(data => console.log(data))
-  //   .catch(error=> console.log(error))
-  // }
-  
+ const object =  {home: designConsts.COLORS.gray, grades: designConsts.COLORS.gray, news: designConsts.COLORS.gray, info: designConsts.COLORS.gray, settings: designConsts.COLORS.gray};
+  const [color, setColor] = useState(object);
+
+  useEffect(() => {
+    HandelClick("home")
+ }, []);
+  const HandelClick = (key) =>
+  {
+    const copy = {...object};    
+    copy[key] = designConsts.COLORS.blue;
+    setColor(copy);
+  }
     return(
       <section className="wrapper">
-        <nav className="nav-wrapper">
-          <Link to="/" className="nav-link  item-2"><span className="item"><img src={home} className="icon"></img><span className="text-down">Główna</span></span></Link>
-          <Link to='grades_attendance' className="nav-link "><span className="grades item"><img src={grades_att} className="icon"></img>Oceny </span></Link>
-          <Link to="info" className="nav-link"> <span className="info item"><img src={info} className="icon"></img>Informacje</span></Link>
-          <Link to="news" className="nav-link item-1"><span className="news item"><img src={news} className="icon"></img><span className="text-down2">Wiadomości</span></span></Link>
-          <Link to="settings" className="nav-link"><span className="settings item"><img src={settings} className="icon"></img>Ustawienia</span></Link>
+        <nav className="nav-wrapper" >
+          <Link to="/" className="nav-link  item-2" onClick={() => HandelClick("home")}>
+            <span className="item"><HomeIcon color={color.home}/>
+              <span className="text-down" style={{color: color.home}}>Główna</span>
+            </span>
+          </Link>
+          <Link to='grades' className="nav-link "  onClick={() => HandelClick("grades")}>
+            <span className="grades item"><GradesIcon color={color.grades}/>
+              <span style={{color: color.grades}}>Oceny <br/>Frekwencja </span>
+            </span>
+          </Link>
+          <Link to="news" className="nav-link " onClick={() => HandelClick("news")}>
+            <span className="news item"><NewsIcon color={color.news}/>
+              <span className="text-down2" style={{color: color.news}}>Wiadomości<br></br> Ogłoszenia</span>
+            </span>
+          </Link>
+          <Link to="info" className="nav-link" onClick={() => HandelClick("info")}> 
+            <span className="info item"><InfoIcon color={color.info}/>
+              <span style={{color: color.info}}>Informacje<br/> Powiadomienia</span>
+            </span>
+          </Link>
+          <Link to="settings" className="nav-link item-1" onClick={() => HandelClick("settings")}>
+              <span className="settings item"><SettingsIcon color={color.settings} />
+                <span style={{color: color.settings}}>Ustawienia</span>
+              </span></Link>
         </nav>
       </section>
     )

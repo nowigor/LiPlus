@@ -1,8 +1,8 @@
 import React from "react";
-import NavBar from "../Components/NavBar";
+import NavBar from "../NavBar";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-import { Grades } from "../Components/Screens/Grades";
-import { Attendace } from "../Components/Screens/Attendance";
+import { Grades } from "./Grades";
+import { Attendace } from "./Attendance";
 
 export function GradesAttendance() {
     return (
