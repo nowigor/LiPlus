@@ -1,0 +1,36 @@
+.flex-wrapper
+{
+     display: flex;
+     flex-direction: column;
+     justify-content: flex-start;
+}
+h1
+{
+     align-self: flex-start;
+     font-size: 26px;
+     margin-left: 15px;
+}
+.notifications-wrapper
+{
+     height: 30%;
+     width: 90%;
+     overflow-y: scroll;
+     display: flex;
+     flex-direction: column;
+     gap: 20px;
+     padding-bottom: 10px;
+
+}
+.timetable-wrapper
+{
+     background-color: rgb(249, 246, 246);
+     width: 90%;
+     height: 57%;
+     margin-top: 10px;
+     overflow-y: scroll;
+}
+.notifications-wrapper::-webkit-scrollbar
+{
+     display: none;
+     width: 0 !important
+}

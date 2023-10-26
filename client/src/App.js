@@ -1,37 +1,38 @@
-import axios from "axios";
 import React, {useEffect, useState} from 'react';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./Components/Screens/Login";
-import consts from "./Includes/consts";
-// import "./Styles/style.css"
+import NavBar from "./Components/NavBar";
+import HomeScreen from "./Components/Screens/HomeScreen";
+
+import GradesScreen from './Components/Screens/GradesScreen';
+import NewsScreen from './Components/Screens/NewsScreen';
+import SettingsScreen from './Components/Screens/SettingsScreen';
+import InfoScreen from './Components/Screens/InfoScreen';
+
 import "./index.css"
 
 const App = () => {
-
   const [authorize, SetAuthorize] = useState(false);
-  useEffect(() => {
-    console.log("=====")
-    console.log(localStorage)
-   }, []);
-
-  const getTimetable = async () =>{
-    try {
-      const response = await axios.post(consts.preURL + '/api/timetable/today');
-      console.log(response.data.data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-  const handleAuthorize = (status) =>{
-    if(status) SetAuthorize(status);
-  }
 
   return (
-    <div className="App">
-      <Login authorized={(status)=> handleAuthorize(status)}/>
+    <>
+    {authorize === false ? (
+      <Login authorized={(status)=> {if(status)SetAuthorize(status)}}/>
+    ): null}
       {authorize &&
-      <button onClick={getTimetable}>GetTime table</button>
+          <BrowserRouter>
+            <Routes className="cos">
+              <Route path="login" element={<Login/>}></Route>
+              <Route path="/" element={<HomeScreen/>}> </Route>
+              <Route path="grades" element={<GradesScreen/>}> </Route>
+              <Route path="info" element={<InfoScreen/>}> </Route>
+              <Route path="news" element={<NewsScreen/>}> </Route>
+              <Route path="settings" element={<SettingsScreen/>}> </Route>
+            </Routes>
+          <NavBar/>
+          </BrowserRouter>
       }
-    </div>
+    </>
   );
 }
 

@@ -1,13 +1,15 @@
 import React, {useRef, useState, useEffect} from 'react';
 import axios from "axios";
-import consts from "../../Includes/consts";
+import LoadingScreen from './LoadingScreen';
+import consts from "../../Constants/ServerConsts";
+import "../../Includes/loading/loading.gif";
 import '../../Styles/Login.css'
 const Login = ({authorized}) =>
 {
     const UserLogin = useRef(null);
     const UserPassword = useRef(null);
     const rememberMe= useRef(null);
-    const [render, SetRender] = useState(true);
+    const [render, SetRender] = useState(false);
     
     useEffect(() => {
        AutoLogin();
@@ -25,6 +27,7 @@ const Login = ({authorized}) =>
 
     const HandleLogin = async () =>{
        console.log(localStorage)
+       localStorage.clear();
         const login = UserLogin.current.value;
         const password =UserPassword.current.value;  
         if(login && password )
@@ -33,13 +36,20 @@ const Login = ({authorized}) =>
             {
                 authorized(true);
                 SetRender(false);
-                if(rememberMe.current.checked)
+                if( rememberMe.current.checked !== null && rememberMe.current.checked)
                 {
                     localStorage.setItem('UserLogin', login);
                     localStorage.setItem('UserPassword', password);
-                    // console.log(localStorage.getItem('UserPassword'))
                 }
             }
+            else
+            {
+                SetRender(true)
+            }
+        }
+        else
+        {
+            SetRender(true)
         }
     }
     const AutoLogin = async ()=>
@@ -47,6 +57,10 @@ const Login = ({authorized}) =>
         if(localStorage.length > 0 && await LogIn(localStorage.getItem('UserLogin'), localStorage.getItem('UserPassword'))){
             SetRender(false);
             authorized(true);
+        }
+        else
+        {
+            SetRender(true);
         }
     }
     return (
@@ -70,10 +84,12 @@ const Login = ({authorized}) =>
                 </div>
                 <span className='text-desc'>* zaloguj się loginem i hasłem do portalu LIbrus </span>
             </article>
-          {/* <button onClick={LogOut}>Wyloguj się</button> */}
           <div className='WaveDown'></div>
         </section>
         }
+        {render === false ? (
+            <LoadingScreen/>
+        ): null }
         </>
       );
 }
