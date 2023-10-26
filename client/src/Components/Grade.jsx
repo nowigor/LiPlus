@@ -1,24 +1,44 @@
-import React from "react";
+import React from "react"
+import "../Styles/Grade.css"
+import { AttendanceIcon } from "./Icons/AttendanceIcon"
 
 export function Grade({ subject, attendance, grades }) {
-    subject = "Matematyka"
+    subject = "Projektowanie zaawansowanych aplikacji webowych"
+    // subject = "Matematyka"
     attendance = 69
-    grades = ["5", "2", "3+", "6", "4", "5", "1"]
+    grades = ["5", "2", "3+", "6", "4-", "5-", "1"]
+
+    let sum = 0;
+    grades.map(grade => {
+        grade = grade.replace("+", ".5")
+        
+        if (grade.indexOf("-") !== -1) {
+            grade = (parseInt(grade[0] - 1).toString() + ".75")
+        }
+
+        sum += parseFloat(grade)
+        return grade;
+    })
+    const average = sum / grades.length 
 
     return (
-        <div>
-            <div>
-                <p></p>
-                <img></img>
+        <div className="grade-background">
+            <div className="attendance-background">
+                <p>{attendance}%</p>
+                <AttendanceIcon className="a-icon" fillColor={"red"}/>
             </div>
-            <div>
-                <p></p>
-                <div>
-                    // grades
+            <div className="middle-background">
+                <p className="subject">{subject}</p>
+                <div className="grades-background">
+                    {
+                        grades.map(e => <p className="grade">
+                            {e}
+                        </p>)
+                    }
                 </div>
             </div>
-            <div>
-
+            <div className="average-background">
+                <p>{average.toFixed(2)}</p>
             </div>
         </div>
     )
