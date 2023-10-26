@@ -9,7 +9,7 @@ const Login = ({authorized}) =>
     const UserLogin = useRef(null);
     const UserPassword = useRef(null);
     const rememberMe= useRef(null);
-    const [render, SetRender] = useState(true);
+    const [render, SetRender] = useState(false);
     
     useEffect(() => {
        AutoLogin();
@@ -27,6 +27,7 @@ const Login = ({authorized}) =>
 
     const HandleLogin = async () =>{
        console.log(localStorage)
+       localStorage.clear();
         const login = UserLogin.current.value;
         const password =UserPassword.current.value;  
         if(login && password )
@@ -41,6 +42,14 @@ const Login = ({authorized}) =>
                     localStorage.setItem('UserPassword', password);
                 }
             }
+            else
+            {
+                SetRender(true)
+            }
+        }
+        else
+        {
+            SetRender(true)
         }
     }
     const AutoLogin = async ()=>
@@ -48,6 +57,10 @@ const Login = ({authorized}) =>
         if(localStorage.length > 0 && await LogIn(localStorage.getItem('UserLogin'), localStorage.getItem('UserPassword'))){
             SetRender(false);
             authorized(true);
+        }
+        else
+        {
+            SetRender(true);
         }
     }
     return (
@@ -74,6 +87,9 @@ const Login = ({authorized}) =>
           <div className='WaveDown'></div>
         </section>
         }
+        {render === false ? (
+            <LoadingScreen/>
+        ): null }
         </>
       );
 }

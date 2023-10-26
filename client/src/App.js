@@ -13,17 +13,12 @@ import "./index.css"
 
 const App = () => {
   const [authorize, SetAuthorize] = useState(false);
-  useEffect(() => {
-   }, []);
-
-  
-  const handleAuthorize = (status) =>{
-    if(status) SetAuthorize(status);
-  }
 
   return (
     <>
-      <Login authorized={(status)=> handleAuthorize(status)}/>
+    {authorize === false ? (
+      <Login authorized={(status)=> {if(status)SetAuthorize(status)}}/>
+    ): null}
       {authorize &&
           <BrowserRouter>
             <Routes className="cos">
