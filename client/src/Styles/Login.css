@@ -99,13 +99,13 @@ input::placeholder
 .login
 {
     margin-top: 20px;
-    background-image: url('../Includes/icons/user-icon.svg');
+    background-image: url('../Includes/icons/user/user-icon.svg');
     background-size: 25px;
 
 }
 .password
 {
-    background-image: url('../Includes/icons/user-password.svg');
+    background-image: url('../Includes/icons/user/user-password.svg');
     background-size: 20px;
     
 }
