@@ -10,6 +10,7 @@ import SettingsScreen from './Components/Screens/SettingsScreen';
 import InfoScreen from './Components/Screens/InfoScreen';
 
 import "./index.css"
+import { GradesAttendance } from "./Components/Screens/GradesAttendance";
 
 const App = () => {
   const [authorize, SetAuthorize] = useState(false);
