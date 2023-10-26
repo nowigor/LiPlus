@@ -1,6 +1,6 @@
 import React from 'react';
-import loading from "../Includes/loading/loading.gif"
-import "../Styles/Loading.css"
+import loading from "../../Includes/loading/loading.gif"
+import "../../Styles/Loading.css"
 const LoadingScreen = () =>
 {
 
