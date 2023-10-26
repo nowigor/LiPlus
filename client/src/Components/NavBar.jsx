@@ -1,14 +1,16 @@
 import "../Styles/NavBar.css";
 import React, {useState, useRef, useEffect} from "react";
+import DesignConsts from "../Constants/DesignConsts.js";
 import {Link } from "react-router-dom";
 import HomeIcon from "./Icons/HomeIcon";
 import GradesIcon from "./Icons/GradesIcon";
 import InfoIcon from "./Icons/InfoIcon";
 import NewsIcon from "./Icons/NewsIcon";
 import SettingsIcon from "./Icons/SettingsIcon";
+import designConsts from "../Constants/DesignConsts.js";
 const NavBar = () =>
 {
- const object =  {home: "#747474", grades: "#747474", news: "#747474", info: "#747474", settings: "#747474"};
+ const object =  {home: designConsts.COLORS.gray, grades: designConsts.COLORS.gray, news: designConsts.COLORS.gray, info: designConsts.COLORS.gray, settings: designConsts.COLORS.gray};
   const [color, setColor] = useState(object);
 
   useEffect(() => {
@@ -17,7 +19,7 @@ const NavBar = () =>
   const HandelClick = (key) =>
   {
     const copy = {...object};    
-    copy[key] = "#00C520";
+    copy[key] = designConsts.COLORS.blue;
     setColor(copy);
   }
     return(

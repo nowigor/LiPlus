@@ -1,7 +1,7 @@
 import React, {useRef, useState, useEffect} from 'react';
 import axios from "axios";
-import LoadingScreen from '../LoadingScreen';
-import consts from "../../Includes/consts";
+import LoadingScreen from './LoadingScreen';
+import consts from "../../Constants/ServerConsts";
 import "../../Includes/loading/loading.gif";
 import '../../Styles/Login.css'
 const Login = ({authorized}) =>
@@ -36,7 +36,7 @@ const Login = ({authorized}) =>
             {
                 authorized(true);
                 SetRender(false);
-                if(rememberMe.current.checked)
+                if( rememberMe.current.checked !== null && rememberMe.current.checked)
                 {
                     localStorage.setItem('UserLogin', login);
                     localStorage.setItem('UserPassword', password);
