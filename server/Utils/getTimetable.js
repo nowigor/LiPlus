@@ -1,16 +1,6 @@
 const cheerio = require('cheerio');
 
 const getTimetable = (from, to, client) => {
-    const days = [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday",
-    ]
-  
     const parser = data => {
       const $ = cheerio.load(data)
   
@@ -20,7 +10,7 @@ const getTimetable = (from, to, client) => {
       }
   
       const hours = []
-      const table = Object.fromEntries(days.map(day => [day, []]))
+      const table = Array.from({ length: 7 }, () => [])
   
       html_table.find('tr.line1')
         .each((idx, row) => {
@@ -54,8 +44,7 @@ const getTimetable = (from, to, client) => {
                 $(cell).find(".text").length > 1 ? secondField : null;
             }
   
-            const key = days[i]
-            table[key].push(!title ? null : {
+            table[i].push(!title ? null : {
               title,
               flag:
                 $(cell).find(".center.plan-lekcji-info.tooltip").trim() ||
