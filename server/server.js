@@ -5,84 +5,83 @@ const bodyParser = require('body-parser');
 const Librus = require("librus-api");
 const cheerio = require('cheerio');
 
-const {getTimetable} = require('./Utils/getTimetable');
+const { getTimetable } = require('./Utils/getTimetable');
 
 const app = express();
 app.use(cors());
-const client = new Librus();
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(express.json());
 
-//@ +++++++ SERVER INFO ++++++++
 const PORT = process.env.PORT || 3030;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-//@ +++++++ END SERVER INFO ++++++++
 
 
+const client = new Librus();
+client.calendar.getTimetable = (start, end) => getTimetable(start, end, client)
 
-//? ======= ROUTES ========
+
+const authenticate = (res, user) => {
+  client.authorize(user.login, user.password).then(result => {
+    if (result) {
+      return res.status(201).json({
+        status: "success",
+        data: "Zalogowano"
+      })
+    }
+    else {
+      return res.status(401).json({
+        status: "error",
+        data: "Nieudane logowanie"
+      })
+    }
+  })
+}
+
+
 app.post('/user/auth/login', (req, res) =>
 {
-  const {UserLogin, UserPassword} = req.body;
-  UserAuth(res,UserLogin, UserPassword);
-  
+  const {
+    UserLogin,
+    UserPassword
+  } = req.body;
+
+  authenticate(res, {
+    login: UserLogin,
+    password: UserPassword
+  })
 });
+
 app.post('/user/auth/logut', (req, res) =>
 {
   //! TODO
   // Zrobić sposób na wylogowanie bo taki nie działa 
-  UserAuth(res, "fake", "fake");
+  authenticate(res, {
+    login: null,
+    password: null
+  })
 });
 
-app.post('/api/timetable/today', (req,res)=>{
-  getTimetable("2023-10-23", "2023-10-23", client)
-  .then((data) => {
-  return res.status(201).json({ status: "success", data: data });
-  })
+
+
+app.post('/notifications/today', (req, res) => {
+
 })
 
+app.post('/notifications/tomorrow', (req, res) => {
 
-app.get('/', (req,res)=>{
-  return res.status(200).json({content: "content"});
 })
-//? ======= END ROUTES ========
 
+app.post('/timetable/today', (req, res) => {
 
+})
 
-//? ======= Handle for routes =======
-const UserAuth = (res,UserLogin, UserPassword) =>
-{
- client.authorize(UserLogin, UserPassword)
-  .then(result =>{
-    if(result !== undefined)
-    {
-      //zalogowano pomyslnie
-        return res.status(201).json({ status: "sucess", data: "Zalogowano" });
-    }
-    else
-    {
-      //nie zalogowano
-      return res.status(401).json({ status: "error", data: "Nieudane logowanie" });
-    }
-  })
-}
-//? ======= END Handle for routes =======
+app.post('/timetable/tomorrow', (req, res) => {
 
+})
 
-//@ HELPFULL FUNCTIONS
-const DateToday = () =>
-{
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = (today.getMonth() + 1).toString().padStart(2, '0'); // Miesiące są zero-based
-  const day = today.getDate().toString().padStart(2, '0');
+app.post('/timetable/pack', (req, res) => {
 
-  const formattedDate = `${year}-${month}-${day}`;
-
-  return formattedDate
-}
-//@ END HELPFULL FUNCTIONS
-
+})
