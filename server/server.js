@@ -134,6 +134,8 @@ app.post('/timetable/tomorrow', (req, res) => {
     
     res.status(201).json({
       status: "success",
+      start: table[0].from,
+      end: table.at(-1).to,
       data: Array.from(table, e => e.name ? e : 'Okienko')
     })
   })
