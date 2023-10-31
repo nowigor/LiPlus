@@ -116,3 +116,8 @@
 .average-background > p {
     font-weight: bold;
 }
+.grades-background::-webkit-scrollbar
+{
+    display: none;
+    width: 0 !important;
+}

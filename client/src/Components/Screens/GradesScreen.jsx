@@ -9,6 +9,8 @@ const GradesScreen = () =>{
     const navigate = useNavigate()
     let enabled = true
 
+    const tmp_data = [{id: "1", name: "Język Polski", grades: ["1", '2', '5+', '2+','1'], absence: 50, avrage: 4.45}] 
+
     const onClick = {
         "Oceny": () => {},
         "Frekwencja": () => navigate("/attendance")
@@ -17,7 +19,7 @@ const GradesScreen = () =>{
     return (
         <section className="grades-attendance-flex-wrapper">
             <ScreenSwitch options={["Oceny", "Frekwencja"]} active={active} setActive={setActive} onClick={onClick} />
-            <Grade/> 
+            <Grade /> 
         </section>
     )
 }
