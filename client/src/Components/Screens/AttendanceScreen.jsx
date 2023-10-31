@@ -14,7 +14,7 @@ const AttendaceScreen = () => {
     }
 
     return (
-        <section className="grades-attendance-flex-wrapper">
+        <section className="grades-attendance-wrapper">
             <ScreenSwitch options={["Oceny", "Frekwencja"]} active={active} setActive={setActive} onClick={onClick}/>
         </section>
     )
