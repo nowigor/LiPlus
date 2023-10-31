@@ -32,7 +32,7 @@ export function Grade({ subject, attendance, grades }) {
                 <p className="subject">{subject}</p>
                 <div className="grades-background">
                     {
-                        grades.map(e => <p className="grade">
+                        grades.map((e,i) => <p className="grade" key={i + "grade"}>
                             {e}
                         </p>)
                     }
