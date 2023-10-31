@@ -22,10 +22,11 @@ export function Grade({ subject, attendance, grades }) {
     const average = sum / grades.length 
 
     return (
-        <div className="grade-background">
+        <section className="grade-background">
             <div className="attendance-background">
-                <p>{attendance}%</p>
-                <AttendanceIcon className="a-icon" fillColor={"red"}/>
+                <span className="att-number">{attendance}%</span>
+                <div className="line"> </div>
+                <AttendanceIcon fillColor={"#3DC753"}/>
             </div>
             <div className="middle-background">
                 <p className="subject">{subject}</p>
@@ -40,6 +41,6 @@ export function Grade({ subject, attendance, grades }) {
             <div className="average-background">
                 <p>{average.toFixed(2)}</p>
             </div>
-        </div>
+        </section>
     )
 }

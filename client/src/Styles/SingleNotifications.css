@@ -6,17 +6,18 @@
 {
      border-radius: 20px;
      width: 98%;
+     max-width: 400px;
      min-height: 100px;
      position: relative;
      margin-left: 1%;
      margin-right: 1%;
-     
 }
 .noti-icon
 {
     position: absolute;
-    left: 25px;
-    bottom: 50px;
+    left: 15px;
+    top: 30px;
+    width: 40px;
 }
 .noti-title
 {
@@ -34,6 +35,8 @@
     top: 27px;
     width: 75%;
     text-wrap: nowrap;
+    display: flex;
+    gap: 3px;
 }
 .noti-topic
 {
@@ -68,7 +71,8 @@
     overflow-x: scroll;
     color: #525252;
 }
-.noti-description::-webkit-scrollbar
+.noti-description::-webkit-scrollbar,
+.noti-topic-text::-webkit-scrollbar
 {
     display: none;
     width: 0 !important;

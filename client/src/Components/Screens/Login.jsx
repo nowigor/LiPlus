@@ -38,8 +38,8 @@ const Login = ({authorized}) =>
                 SetRender(false);
                 if( rememberMe.current.checked !== null && rememberMe.current.checked)
                 {
-                    localStorage.setItem('UserLogin', login);
-                    localStorage.setItem('UserPassword', password);
+                        localStorage.setItem('UserLogin', login);
+                        localStorage.setItem('UserPassword', password);
                 }
             }
             else

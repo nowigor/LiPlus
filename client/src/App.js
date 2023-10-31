@@ -8,9 +8,8 @@ import GradesScreen from './Components/Screens/GradesScreen';
 import NewsScreen from './Components/Screens/NewsScreen';
 import SettingsScreen from './Components/Screens/SettingsScreen';
 import InfoScreen from './Components/Screens/InfoScreen';
-
+import AttendaceScreen  from './Components/Screens/AttendanceScreen';
 import "./index.css"
-import { GradesAttendance } from "./Components/Screens/GradesAttendance";
 
 const App = () => {
   const [authorize, SetAuthorize] = useState(false);
@@ -26,6 +25,7 @@ const App = () => {
               <Route path="login" element={<Login/>}></Route>
               <Route path="/" element={<HomeScreen/>}> </Route>
               <Route path="grades" element={<GradesScreen/>}> </Route>
+              <Route path="attendance" element={<AttendaceScreen/>}> </Route>
               <Route path="info" element={<InfoScreen/>}> </Route>
               <Route path="news" element={<NewsScreen/>}> </Route>
               <Route path="settings" element={<SettingsScreen/>}> </Route>
