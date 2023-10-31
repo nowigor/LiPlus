@@ -22,11 +22,11 @@ export function ScreenSwitch({ options, active, setActive, onClick }) {
         <section className="switch-wrapper">
             <div className="background">
                 {
-                    options.map(e => {
+                    options.map((e, i)=> {
                         const style = { width: `${(1 / options.length) * 100}%` }
 
                         return (
-                            <div className='option' style={style} onClick={() => select(e)}>
+                            <div className='option' style={style}  key={i} onClick={() => select(e)}>
                                 <p>{e}</p>
                             </div>
                         )
