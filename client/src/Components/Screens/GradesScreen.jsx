@@ -12,9 +12,9 @@ const GradesScreen = () =>{
     const tmp_data = [
         { id: "1", name: "Język Polski", grades: ["1", '2', '5+', '2+', '1'], absence: 80, average: 4.45 },
         { id: "2", name: "Matematyka", grades: ["3", '4', '4+', '5', '3+'], absence: 30, average: 3.82 },
-        { id: "3", name: "Język Angielski", grades: ["4", '4', '4+', '5+', '4+'], absence: 20, average: 4.15 },
+        { id: "3", name: "Język Angielski", grades: ["4", '4', '4+', '5+', '4+'], absence: 100, average: 4.15 },
         { id: "4", name: "Fizyka", grades: ["3", '4', '3+', '4+', '3+'], absence: 57, average: 3.67 },
-        { id: "5", name: "Chemia", grades: ["2", '3', '4', '3+', '2+'], absence: 10, average: 2.89 },
+        { id: "5", name: "Chemia", grades: ["2", '3', '4', '3+', '2+'], absence: 95, average: 2.89 },
         { id: "6", name: "Historia", grades: ["5", '5', '4+', '5+', '5+'], absence: 5, average: 4.95 },
         { id: "7", name: "Biologia", grades: ["3", '4', '3+', '4', '3+'], absence: 26, average: 3.33 },
         { id: "8", name: "Geografia", grades: ["4", '5', '4+', '5', '4+'], absence: 35, average: 4.18 },

@@ -82,7 +82,7 @@ const Login = ({authorized}) =>
                     </span>
                     <span className='text-forget'><a target="_blank" rel="noopener noreferrer" href='https://portal.librus.pl'>Przypomnij hasło</a></span>
                 </div>
-                <span className='text-desc'>* zaloguj się loginem i hasłem do portalu LIbrus </span>
+                <span className='text-desc'>* zaloguj się loginem i hasłem do portalu Librus </span>
             </article>
           <div className='WaveDown'></div>
         </section>
