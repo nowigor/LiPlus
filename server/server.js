@@ -125,8 +125,10 @@ const handleApiGrades = async () => {
   const subjects = await client.homework.listSubjects();
   const tab = [];
 
+  let counter = 0;
   for (const subject of subjects) {
-    let element = { id: subject.id, name: subject.name };
+    counter += 1;
+    let element = { id: counter, id_subject: subject.id, name: subject.name };
     const grades = await getGrades(subject.id);
     element.grades = grades;
     if(grades)
