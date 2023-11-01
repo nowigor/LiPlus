@@ -16,24 +16,26 @@ export function Grade({id, name, grades, absence, average}) {
         "#f2d9bb", "#eccdb7", "#dcc7e0", "#e2b5d7", "#c5d6bf", "#fec8bb", "#fcccb6", "#c7c7df", "#b5bdd7", "#fed19d"
       ];
     const backgroundColor = pastelColors[id - 1];
-    let fontColor = "black";
+    let fontColor = "white";
     if (absence <= 50) {
-        fontColor = "red";
+        fontColor = "#C63851";
     } else if (absence >= 51 && absence <= 80) {
-        fontColor = "orange";
+        fontColor = "#FF6336";
     } else {
-        fontColor = "green";
+        fontColor = "#00AC11";
     }
     return (
-        <section class="grades-box" style={{ backgroundColor }}>
-            <div class="grid-item-1">
-                <div class="attendance"  style={{color: fontColor}}>
+        <section className="grades-box" style={{ backgroundColor }}>
+            <div className="grid-item-1">
+                <div className="attendance"  style={{color: fontColor}}>
                     {absence}%
+                    <span className="line-hv" style={{ backgroundColor: fontColor }}></span>
+                    <AttendanceIcon fillColor={fontColor}/>
                 </div>
             </div>
-            <div class="grid-item-2">
-                <div class="subject-name">{name}</div>
-                <div class="grades-wp">
+            <div className="grid-item-2">
+                <div className="subject-name">{name}</div>
+                <div className="grades-wp">
                     {grades.map(e =>{
                         return(
                             e + " "
@@ -42,8 +44,8 @@ export function Grade({id, name, grades, absence, average}) {
                 }
                 </div>
             </div>
-            <div class="grid-item-3">
-                <div class="average">
+            <div className="grid-item-3">
+                <div className="average">
                     {average } 
                 </div>
             </div>

@@ -13,10 +13,10 @@ const GradesScreen = () =>{
         { id: "1", name: "Język Polski", grades: ["1", '2', '5+', '2+', '1'], absence: 80, average: 4.45 },
         { id: "2", name: "Matematyka", grades: ["3", '4', '4+', '5', '3+'], absence: 30, average: 3.82 },
         { id: "3", name: "Język Angielski", grades: ["4", '4', '4+', '5+', '4+'], absence: 20, average: 4.15 },
-        { id: "4", name: "Fizyka", grades: ["3", '4', '3+', '4+', '3+'], absence: 15, average: 3.67 },
+        { id: "4", name: "Fizyka", grades: ["3", '4', '3+', '4+', '3+'], absence: 57, average: 3.67 },
         { id: "5", name: "Chemia", grades: ["2", '3', '4', '3+', '2+'], absence: 10, average: 2.89 },
         { id: "6", name: "Historia", grades: ["5", '5', '4+', '5+', '5+'], absence: 5, average: 4.95 },
-        { id: "7", name: "Biologia", grades: ["3", '4', '3+', '4', '3+'], absence: 25, average: 3.33 },
+        { id: "7", name: "Biologia", grades: ["3", '4', '3+', '4', '3+'], absence: 26, average: 3.33 },
         { id: "8", name: "Geografia", grades: ["4", '5', '4+', '5', '4+'], absence: 35, average: 4.18 },
         { id: "9", name: "Informatyka", grades: ["2", '3', '2+', '3', '2+'], absence: 45, average: 2.55 },
         { id: "10", name: "Sztuka", grades: ["4", '5', '4+', '5+', '4+'], absence: 30, average: 4.12 },
@@ -40,12 +40,12 @@ const GradesScreen = () =>{
     return (
         <section className="grades-attendance-wrapper">
             <ScreenSwitch options={["Oceny", "Frekwencja"]} active={active} setActive={setActive} onClick={onClick} />
-            <section class="grades-attendance-box-wrapper">
+            <section className="grades-attendance-box-wrapper">
                 {
                     tmp_data.map((e,i )=>
                     {
                         return(
-                            <Grade id={e.id} name={e.name} grades = {e.grades} absence={e.absence} average={e.average}/>
+                            <Grade id={e.id} name={e.name} grades = {e.grades} absence={e.absence} average={e.average} key={e.name + i}/>
                         )
                     })
                 }
