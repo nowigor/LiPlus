@@ -38,16 +38,22 @@ app.post('/user/auth/logut', (req, res) =>
 });
 
 app.post('/api/timetable/today', (req,res)=>{
-  getTimetable("2023-10-23", "2023-10-23", client)
+  getTimetable("2023-09-25", "2023-10-01", client)
   .then((data) => {
   return res.status(201).json({ status: "success", data: data });
   })
 })
 
-
 app.get('/', (req,res)=>{
   return res.status(200).json({content: "content"});
 })
+
+app.post('/api/grades', (req, res) => {
+  handleApiGrades().then((data) => {
+      res.status(200).json(data);
+  });
+});
+
 //? ======= END ROUTES ========
 
 
@@ -69,6 +75,74 @@ const UserAuth = (res,UserLogin, UserPassword) =>
     }
   })
 }
+
+const getSubject = async (id) => {
+  const data = await client.homework.listSubjects();
+  const subject = data.find(element => element.id === id);
+  return subject;
+};
+
+const getGrades = async (id) => {
+    const subject = await getSubject(id);
+    const data = await client.info.getGrades();
+
+    for (const element of data) {
+      if (element.name === subject.name) {
+        const grades = element.semester[0].grades;
+        //konwersja z string na int
+        let result = [];
+        grades.forEach((element)=>{
+          result.push(element.value)
+        })
+        return result;
+      }
+    }
+};
+
+const avg = (tab) => {
+  let sum = 0;
+  let counter = 0;
+  tab.forEach(element => {
+    if(parseInt(element[0]))
+    {
+      sum += parseInt(element);
+      counter++;
+    }
+    else if(parseInt(element[0]) && (element[1] == "-" || element[1] == "+"))
+    {
+      sum += parseInt(element[0]);
+      counter++;
+    }
+  });
+  if(counter == 0)
+  {
+    return null;
+  }
+  return sum/counter;
+}
+
+const handleApiGrades = async () => {
+  const subjects = await client.homework.listSubjects();
+  const tab = [];
+
+  for (const subject of subjects) {
+    let element = { id: subject.id, name: subject.name };
+    const grades = await getGrades(subject.id);
+    element.grades = grades;
+    if(grades)
+    {
+      element.avg = avg(grades);
+    }
+    else
+    {
+      element.avg = null;
+    }
+    element.attendance = 47;
+    tab.push(element);
+  }
+  //console.log(tab);
+  return tab;
+};
 //? ======= END Handle for routes =======
 
 
