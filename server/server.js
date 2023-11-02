@@ -5,84 +5,181 @@ const bodyParser = require('body-parser');
 const Librus = require("librus-api");
 const cheerio = require('cheerio');
 
-const {getTimetable} = require('./Utils/getTimetable');
+const { getTimetable } = require('./Utils/getTimetable');
+const { formatDay, weekOfDay } = require('./Utils/dateFormat')
+const { getEvent } = require('./Utils/getEvent')
+const { getCommonNotifications, getMiscNotifications, getLessonNotifications, getGradeNotifications } = require('./Utils/notifications')
+const { _request } = require('./Utils/_request')
 
+//@ Server
 const app = express();
 app.use(cors());
-const client = new Librus();
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(express.json());
 
-//@ +++++++ SERVER INFO ++++++++
 const PORT = process.env.PORT || 3030;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-//@ +++++++ END SERVER INFO ++++++++
 
 
+//@ Client
+const client = new Librus();
+client.calendar.getTimetable = (start, end) => getTimetable(start, end, client)
+client.calendar.getEvent = (id, title) => getEvent(id, title, client)
+client._request = (method, apiFunction, data, _) => _request(method, apiFunction, data, client.caller)
 
-//? ======= ROUTES ========
+
+//@ User authentication
+const authenticate = (res, user) => {
+  client.authorize(user.login, user.password).then(result => {
+    if (result) {
+      return res.status(201).json({
+        status: "success",
+        data: "Zalogowano"
+      })
+    }
+    else {
+      return res.status(401).json({
+        status: "error",
+        data: "Nieudane logowanie"
+      })
+    }
+  })
+}
+
+
+//@ User login/logout
 app.post('/user/auth/login', (req, res) =>
 {
-  const {UserLogin, UserPassword} = req.body;
-  UserAuth(res,UserLogin, UserPassword);
-  
+  const {
+    UserLogin,
+    UserPassword
+  } = req.body;
+
+  authenticate(res, {
+    login: UserLogin,
+    password: UserPassword
+  })
 });
+
 app.post('/user/auth/logut', (req, res) =>
 {
-  //! TODO
-  // Zrobić sposób na wylogowanie bo taki nie działa 
-  UserAuth(res, "fake", "fake");
+  //TODO
+  //+ Zrobić sposób na wylogowanie bo taki nie działa 
+  authenticate(res, {
+    login: null,
+    password: null
+  })
 });
 
-app.post('/api/timetable/today', (req,res)=>{
-  getTimetable("2023-10-23", "2023-10-23", client)
-  .then((data) => {
-  return res.status(201).json({ status: "success", data: data });
+
+
+//@ Endpoints
+app.post('/notifications/today', (req, res) => {
+  return Promise.all([
+    getCommonNotifications(client),
+    getGradeNotifications(client)
+  ]).then(([common, grade]) => {
+    res.status(201).json({
+      status: "success",
+      data: common.concat(grade)
+    })
   })
 })
 
-
-app.get('/', (req,res)=>{
-  return res.status(200).json({content: "content"});
-})
-//? ======= END ROUTES ========
-
-
-
-//? ======= Handle for routes =======
-const UserAuth = (res,UserLogin, UserPassword) =>
-{
- client.authorize(UserLogin, UserPassword)
-  .then(result =>{
-    if(result !== undefined)
-    {
-      //zalogowano pomyslnie
-        return res.status(201).json({ status: "sucess", data: "Zalogowano" });
-    }
-    else
-    {
-      //nie zalogowano
-      return res.status(401).json({ status: "error", data: "Nieudane logowanie" });
-    }
+app.post('/notifications/tomorrow', (req, res) => {
+  return Promise.all([
+    getCommonNotifications(client),
+    getGradeNotifications(client),
+    getMiscNotifications(client)
+  ]).then(([common, grade, misc]) => {
+    res.status(201).json({
+      status: "success",
+      data: common.concat(grade).concat(misc)
+    })
   })
-}
-//? ======= END Handle for routes =======
+})
 
+app.post('/timetable/today', (req, res) => {
+  const today = new Date()
 
-//@ HELPFULL FUNCTIONS
-const DateToday = () =>
-{
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = (today.getMonth() + 1).toString().padStart(2, '0'); // Miesiące są zero-based
-  const day = today.getDate().toString().padStart(2, '0');
+  const {
+    monday,
+    sunday
+  } = weekOfDay(today)
 
-  const formattedDate = `${year}-${month}-${day}`;
+  return Promise.all([
+    client.calendar.getTimetable(monday, sunday),
+    getLessonNotifications(formatDay(today), client)
+  ]).then(([timetable, notifications]) => {
+    const table = timetable[(today.getDay() + 6) % 7]
 
-  return formattedDate
-}
-//@ END HELPFULL FUNCTIONS
+    for (let i = 0; i < table.length; i++) {
+      if (table[i]) {
+        table[i].notifications = notifications[i]
+      }
+    }
 
+    res.status(201).json({
+      status: "success",
+      data: table
+    })
+  })
+})
+
+app.post('/timetable/tomorrow', (req, res) => {
+  const tomorrow = new Date()
+  const day_number = (tomorrow.getDay() + 6) % 7
+
+  if (day_number <= 3) { // monday - thursday
+    tomorrow.setDate(tomorrow.getDate() + 1)
+  }
+  else { // friday, saturday, sunday
+    tomorrow.setDate(tomorrow.getDate() + 7 - day_number)
+  }
+
+  const {
+    monday, sunday
+  } = weekOfDay(tomorrow)
+
+  client.calendar.getTimetable(monday, sunday).then(data => {
+    const table = data[(tomorrow.getDay() + 6) % 7]
+    
+    res.status(201).json({
+      status: "success",
+      start: table.find(e => e).from,
+      end: table.reverse().find(e => e).to,
+      data: table
+    })
+  })
+})
+
+app.post('/timetable/pack', (req, res) => {
+  const tomorrow = new Date()
+  const day_number = (tomorrow.getDay() + 6) % 7
+
+  if (day_number <= 3) { // monday - thursday
+    tomorrow.setDate(tomorrow.getDate() + 1)
+  }
+  else { // friday, saturday, sunday
+    tomorrow.setDate(tomorrow.getDate() + 7 - day_number)
+  }
+
+  const {
+    monday, sunday
+  } = weekOfDay(tomorrow)
+
+  client.calendar.getTimetable(monday, sunday).then(data => {
+    const table = data[(tomorrow.getDay() + 6) % 7].filter(e => e)
+
+    res.status(201).json({
+      status: "success",
+      data: {
+        count: table.length,
+        classes: table.filter(e => e.name !== 'Okienko').map(e => e.name).filter((e, i, a) => a.indexOf(e) === i)
+      }
+    })
+  })
+})
