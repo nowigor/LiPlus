@@ -8,7 +8,8 @@ const cheerio = require('cheerio');
 const { getTimetable } = require('./Utils/getTimetable');
 const { formatDay, weekOfDay } = require('./Utils/dateFormat')
 const { getEvent } = require('./Utils/getEvent')
-const { getCommonNotifications } = require('./Utils/notifications')
+const { getCommonNotifications, getMiscNotifications, getLessonNotifications, getGradeNotifications } = require('./Utils/notifications')
+const { _request } = require('./Utils/_request')
 
 //@ Server
 const app = express();
@@ -26,7 +27,8 @@ app.listen(PORT, () => {
 //@ Client
 const client = new Librus();
 client.calendar.getTimetable = (start, end) => getTimetable(start, end, client)
-client.calendar.getEvent = (id, isAbsence = false) => getEvent(id, isAbsence, client)
+client.calendar.getEvent = (id, title) => getEvent(id, title, client)
+client._request = (method, apiFunction, data, _) => _request(method, apiFunction, data, client.caller)
 
 
 //@ User authentication
@@ -76,37 +78,50 @@ app.post('/user/auth/logut', (req, res) =>
 
 //@ Endpoints
 app.post('/notifications/today', (req, res) => {
-  getCommonNotifications(client).then(notifications => {
-    //+ dodać powiadomienia o poprawie ocen
+  return Promise.all([
+    getCommonNotifications(client),
+    getGradeNotifications(client)
+  ]).then(([common, grade]) => {
     res.status(201).json({
       status: "success",
-      data: notifications
+      data: common.concat(grade)
     })
   })
 })
 
 app.post('/notifications/tomorrow', (req, res) => {
-  getCommonNotifications(client).then(notifications => {
-    //+ dodać powiadomienia o poprawie ocen
-    //+ dodać powiadomienia o stroju WF
-    //+ dodać powiadomienia o śniadaniu
-    //+ dodać powiadomienia o laptopie
+  return Promise.all([
+    getCommonNotifications(client),
+    getGradeNotifications(client),
+    getMiscNotifications(client)
+  ]).then(([common, grade, misc]) => {
     res.status(201).json({
       status: "success",
-      data: notifications
+      data: common.concat(grade).concat(misc)
     })
   })
 })
 
 app.post('/timetable/today', (req, res) => {
+  const today = new Date("2023-10-19")
+
   const {
     monday,
     sunday
-  } = weekOfDay(new Date())
+  } = weekOfDay(today)
 
-  client.calendar.getTimetable(monday, sunday).then(data => {
-    const table = data[((new Date()).getDay() + 6) % 7]
-    //+ dodać powiadomienia dla każdej lekcji (sprawdziany, itp.)
+  return Promise.all([
+    client.calendar.getTimetable(monday, sunday),
+    getLessonNotifications(formatDay(today), client)
+  ]).then(([timetable, notifications]) => {
+    const table = timetable[(today.getDay() + 6) % 7]
+
+    for (let i = 0; i < table.length; i++) {
+      if (table[i]) {
+        table[i].notifications = notifications[i]
+      }
+    }
+
     res.status(201).json({
       status: "success",
       data: table
