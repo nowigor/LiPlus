@@ -103,7 +103,7 @@ app.post('/notifications/tomorrow', (req, res) => {
 })
 
 app.post('/timetable/today', (req, res) => {
-  const today = new Date("2023-10-19")
+  const today = new Date()
 
   const {
     monday,
@@ -149,9 +149,9 @@ app.post('/timetable/tomorrow', (req, res) => {
     
     res.status(201).json({
       status: "success",
-      start: table[0].from,
-      end: table.at(-1).to,
-      data: Array.from(table, e => e.name ? e : 'Okienko')
+      start: table.find(e => e).from,
+      end: table.reverse().find(e => e).to,
+      data: table
     })
   })
 })
@@ -172,14 +172,13 @@ app.post('/timetable/pack', (req, res) => {
   } = weekOfDay(tomorrow)
 
   client.calendar.getTimetable(monday, sunday).then(data => {
-    const table = data[(tomorrow.getDay() + 6) % 7]
-    data = Array.from(table, e => e.name ? e : null)
+    const table = data[(tomorrow.getDay() + 6) % 7].filter(e => e)
 
     res.status(201).json({
       status: "success",
       data: {
-        count: data.length,
-        classes: data.filter((e, i) => e && (data.indexOf(e) === i))
+        count: table.length,
+        classes: table.filter(e => e.name !== 'Okienko').map(e => e.name).filter((e, i, a) => a.indexOf(e) === i)
       }
     })
   })
