@@ -6,7 +6,7 @@ const Librus = require("librus-api");
 const cheerio = require('cheerio');
 
 const { getTimetable } = require('./Utils/getTimetable');
-const { formatDay, weekOfDay } = require('./Utils/dateFormat')
+const { formatDay, weekOfDay, isLater } = require('./Utils/dateFormat')
 const { getEvent } = require('./Utils/getEvent')
 const { getCommonNotifications, getMiscNotifications, getLessonNotifications, getGradeNotifications } = require('./Utils/notifications')
 const { _request } = require('./Utils/_request')
@@ -211,6 +211,46 @@ app.post('/timetable/pack', (req, res) => {
           count: table.length,
           classes: table.filter(e => e.name !== 'Okienko').map(e => e.name).filter((e, i, a) => a.indexOf(e) === i)
         }
+      })
+    })
+  }, () => {
+    res.status(401).json({
+      status: "error",
+      data: "Nie mogliśmy pobrać danych :("
+    })
+  })
+})
+
+app.post('/communication/all', (req, res) => {
+  client.authorize(req.body.UserLogin, req.body.UserPassword).then(() => {
+    Promise.all([
+      client.inbox.listAnnouncements(),
+      client.inbox.listInbox(5).then(inbox => 
+        Promise.all(inbox.map(e => client.inbox.getMessage(5, e.id)))
+      )
+    ]).then(([announcements, messages]) => {
+      announcements.forEach(e => {
+        e.type = 'announcement'
+        e.time = null
+        e.read = null
+      })
+  
+      messages.forEach(e => {
+        delete e.files
+        delete e.html
+        delete e.url
+        delete e.id
+        delete e.folderId
+  
+        const [date, time] = e.date.split(' ')
+        e.date = date
+        e.time = time
+        e.type = 'message'
+      })
+  
+      res.status(201).json({
+        status: "success",
+        data: announcements.concat(messages).sort((a, b) => isLater(a, b) ? -1 : 1)
       })
     })
   }, () => {
