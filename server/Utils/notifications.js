@@ -33,7 +33,7 @@ function getCommonNotifications(client) {
                     subject: n.Przedmiot,
                     topic: n.Opis,
                     days: daysRemaining(n.Data),
-                    description: `Za ${daysRemaining(n.Data)} dni masz ${n.Rodzaj} z ${n.Przedmiot}`,
+                    description: `Za ${daysRemaining(n.Data)} dni masz ${n.Rodzaj} ${n.Przedmiot ? `z ${n.Przedmiot}` : '[brak przedmiotu]'}`,
                     date: n.Data,
                     category: n.Rodzaj.toLowerCase(),
                     icon: 'red_warning'
@@ -41,7 +41,7 @@ function getCommonNotifications(client) {
             } else {
                 const [_, subject, __] = n.user.split(',')
                 return {
-                    importance: 1,
+                    importance: 0,
                     title: 'Zadanie domowe',
                     subject: subject.trim(),
                     topic: n.title,
@@ -49,7 +49,7 @@ function getCommonNotifications(client) {
                     days: daysRemaining(n.to),
                     date: n.to,
                     category: 'zadanie domowe',
-                    icon: 'yellow_warning'
+                    icon: 'green_backpack'
                 }
             }
         })
@@ -108,7 +108,7 @@ function getMiscNotifications(client) {
             days: parseInt(n_index / 13) - day_number,
             date: formatDay(dateInDays(parseInt(n_index / 13) - day_number)),
             category: 'spakuj wf',
-            icon: 'green_suit'
+            icon: 'blue_wf'
         }, {
             importance: 0,
             title: 'Wypierz struj na WF',
@@ -118,7 +118,7 @@ function getMiscNotifications(client) {
             days: day_number - parseInt(p_index / 13),
             date: formatDay(dateInDays(-(day_number - parseInt(p_index / 13)))),
             category: 'wypierz wf',
-            icon: 'green_suit'
+            icon: 'blue_wf'
         }, {
             importance: 0,
             title: 'Spakuj jedzenie',
@@ -128,7 +128,7 @@ function getMiscNotifications(client) {
             days: is_today ? 0 : (!next_day_index ? 3 : 1),
             date: formatDay(is_today ? today : dateInDays(!next_day_index ? +3 : +1)),
             category: 'jedzenie',
-            icon: 'green_food'
+            icon: 'blue_food'
         }, {
             importance: 0,
             title: 'Naładuj i spakuj laptopa',
@@ -138,7 +138,7 @@ function getMiscNotifications(client) {
             days: is_today ? 0 : (!next_day_index ? 3 : 1),
             date: formatDay(is_today ? today : dateInDays(!next_day_index ? +3 : +1)),
             category: 'laptop',
-            icon: 'green_laptop'
+            icon: 'blue_laptop'
         }]
     })
 }
@@ -160,7 +160,7 @@ function getGradeNotifications(client) {
             if (day_difference <= correction_time) {
                 notifications.push({
                     importance: days_remaining < 3 ? 2 : 1,
-                    title: `Popraw ocenę z ${grade.Przedmiot}`,
+                    title: `Popraw ocenę (${grade.Ocena})`,
                     subject: grade.Przedmiot,
                     topic: grade.Kategoria,
                     description: `Zostało Ci ${days_remaining} ${days_remaining === 1 ? 'dzień' : 'dni'} żeby poprawić ${grade.Ocena} z ${grade.Przedmiot}`,
