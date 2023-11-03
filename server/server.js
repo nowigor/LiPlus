@@ -183,3 +183,98 @@ app.post('/timetable/pack', (req, res) => {
     })
   })
 })
+
+app.post('/api/attendance', (req, res) => {
+  handleAbsence().then((data)=>{
+    res.status(200).json(data);
+  })
+})
+
+
+
+
+//!!!!!!!!!!!!!!!!!!!!!!!!handle functions!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+const countAbsence = async() => {
+  const data = await client.absence.getAbsences();
+  const now = new Date();
+  const month = now.getMonth();
+  let days = DaysThisMonth();
+
+  let tab = [];
+
+  let counters = [
+    {type: "nb", count: 0}, 
+    {type: "u", count: 0}, 
+    {type: "sp", count: 0}
+  ];  
+  data["0"].forEach(element => {
+    if(element.date != null)
+    {
+      element.table.forEach(element1 => {
+        if(element1 != null)
+        {
+          counters.forEach((counter)=>{
+            if(counter.type == element1.type)
+            {
+              counter.count++;
+            }
+          })
+        }
+        
+      });
+    };
+  });
+  return counters;
+}
+const DaysThisMonth = () => {
+  const date = new Date();
+
+  let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+  let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+  for(let day = firstDay; true; day.setDate(day.getDate() - 1))
+  {
+    //poniedzialek
+    if(day.getDay() == 1)
+    {
+      firstDay = day;
+      break;
+    }
+  }
+
+  for(let day = lastDay; true; day.setDate(day.getDate() + 1))
+  {
+    //niedziela
+    if(day.getDay() == 0)
+    {
+      lastDay = day;
+      break;
+    }
+  }
+
+  let result = []
+  for(let day = firstDay; day <= lastDay; day.setDate(day.getDate() + 1))
+  {
+    let element = {day:day.getDate(),date:day};
+    result.push(element);
+  }
+  return result;
+}
+
+
+const handleAbsence = async () =>{
+  const counters = await countAbsence();
+  const days = DaysThisMonth();
+  const absences = await client.absence.getAbsences();
+  absences["0"].forEach(element => {
+    if(element.date != null)
+    {
+      const part = element.date.split(" ")[0]; // Extract the date part
+      const date = new Date(part);
+      
+    }
+  })
+
+  return absences;
+}
+//!!!!!!!!!!!!!!!!!!!!!!!!handle functions!!!!!!!!!!!!!!!!!!!!!!!!!!!!
