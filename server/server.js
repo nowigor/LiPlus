@@ -78,6 +78,7 @@ app.post('/user/auth/logut', (req, res) =>
 
 //@ Endpoints
 app.post('/notifications/today', (req, res) => {
+ client.authorize(req.UserLogin, req.UserPassword).then(()=>{
   return Promise.all([
     getCommonNotifications(client),
     getGradeNotifications(client)
@@ -87,6 +88,7 @@ app.post('/notifications/today', (req, res) => {
       data: common.concat(grade)
     })
   })
+ })
 })
 
 app.post('/notifications/tomorrow', (req, res) => {
@@ -103,28 +105,29 @@ app.post('/notifications/tomorrow', (req, res) => {
 })
 
 app.post('/timetable/today', (req, res) => {
-  const today = new Date()
-
-  const {
-    monday,
-    sunday
-  } = weekOfDay(today)
-
-  return Promise.all([
-    client.calendar.getTimetable(monday, sunday),
-    getLessonNotifications(formatDay(today), client)
-  ]).then(([timetable, notifications]) => {
-    const table = timetable[(today.getDay() + 6) % 7]
-
-    for (let i = 0; i < table.length; i++) {
-      if (table[i]) {
-        table[i].notifications = notifications[i]
+  client.authorize(req.UserLogin, req.UserPassword).then(()=>{
+    const today = new Date()
+    const {
+      monday,
+      sunday
+    } = weekOfDay(today)
+  
+    return Promise.all([
+      client.calendar.getTimetable(monday, sunday),
+      getLessonNotifications(formatDay(today), client)
+    ]).then(([timetable, notifications]) => {
+      const table = timetable[(today.getDay() + 6) % 7]
+  
+      for (let i = 0; i < table.length; i++) {
+        if (table[i]) {
+          table[i].notifications = notifications[i]
+        }
       }
-    }
-
-    res.status(201).json({
-      status: "success",
-      data: table
+  
+      res.status(201).json({
+        status: "success",
+        data: table
+      })
     })
   })
 })

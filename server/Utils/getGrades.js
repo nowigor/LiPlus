@@ -3,7 +3,6 @@ const cheerio = require('cheerio')
 function getGrades(client) {
     const parser = data => {
         const $ = cheerio.load(data)
-
         const html_table = $('table.decorated.stretch:not([style])')
         if (!html_table.length) {
             return null

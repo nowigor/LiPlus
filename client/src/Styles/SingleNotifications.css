@@ -26,6 +26,18 @@
     top: -20px;
     left: 50px;
     font-weight: bolder;
+    overflow-y: scroll;
+    text-wrap: nowrap;
+    width: 70%;
+}
+.noti-date
+{
+    font-size: 10px;
+    font-weight: 600;
+    position: absolute;
+    right: 15px;
+    bottom: 5px;
+    color: #5C5757
 }
 .noti-subject
 {
@@ -60,7 +72,7 @@
 }
 .noti-description
 {
-    width: 75%;
+    width: 65%;
     height: 35px;
     position: absolute;
     bottom: 4px;
@@ -72,6 +84,7 @@
     color: #525252;
 }
 .noti-description::-webkit-scrollbar,
+.noti-title::-webkit-scrollbar,
 .noti-topic-text::-webkit-scrollbar
 {
     display: none;
@@ -83,4 +96,10 @@
     height: 15px;
     overflow-y: scroll;
     text-wrap: nowrap;
+}
+.noti-days-left
+{
+    position: absolute;
+    right: 15px;
+    bottom: 20px;
 }

@@ -88,7 +88,9 @@ const Login = ({authorized}) =>
         </section>
         }
         {render === false ? (
-            <LoadingScreen/>
+            <div className='center-loading-circle'>
+                <LoadingScreen/>
+            </div>
         ): null }
         </>
       );
