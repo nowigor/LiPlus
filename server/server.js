@@ -193,6 +193,18 @@ app.post('/api/grades', (req, res) => {
   });
 });
 
+app.post('/test', (req, res) => {
+  // client.calendar.getTimetable("2023-10-23", "2023-10-29").then((data) => {
+  //   res.status(200).json(data);
+  // });
+  countSubjects().then((data) => {
+    res.status(200).json(data);
+  });
+});
+
+
+
+
 
 //? ======= Handle for routes =======
 const UserAuth = (res,UserLogin, UserPassword) =>
@@ -257,6 +269,122 @@ const avg = (tab) => {
   return sum/counter;
 }
 
+const startYearRounded = () => {
+  const today = new Date();
+  const sep = 8;
+  let startYear;
+  if(today.getMonth() >= sep)
+  {
+    startYear = new Date(today.getFullYear(), 8, 1)
+  }
+  else
+  {
+    startYear = new Date(today.getFullYear() - 1, 8, 1)
+  }
+  while(startYear.getDay() != 1)
+  {
+    startYear.setDate(startYear.getDate() - 1);
+  }
+  return startYear;
+}
+
+const countSubjects = async () => {
+  const startYear = startYearRounded();
+  const endYear = new Date(startYear.getFullYear() + 1,5, 30);
+  const today = new Date();
+  let startWeek = startYear;
+  let endWeek = new Date(startWeek);
+  endWeek.setDate(endWeek.getDate() + 6);
+  let subjects = {};
+
+  while(true)
+  {
+    //jezeli jest koniec roku
+    //czyli endWeek jest pozniej niz endYear
+    if(endWeek > endYear)
+    {
+      console.log("koniec roku")
+      break;
+    }
+    //jezeli jest w tym tyogdniu today
+    if (today >= startWeek && today <= endWeek) {
+      console.log("Ostatni tydzień");
+      try{
+        const timetable = await client.calendar.getTimetable(formatDateTimetable(startWeek), formatDateTimetable(endWeek));
+        let counter = 0;
+
+        while(true){
+          console.log(today.toDateString());
+          console.log(startWeek.toDateString());
+          if(today.toDateString() == startWeek.toDateString())
+          {
+            break;
+          }
+          day = timetable[counter];
+          day.forEach((lesson)=>{
+            //czy jest lekcja o tej godzinie
+            if(lesson != null)
+            {
+              //czy sie odbyla
+              if(lesson.active)
+              {
+                if(lesson.name in subjects)
+                {
+                  subjects[lesson.name]++;
+                }
+                else
+                {
+                  subjects[lesson.name] = 1;
+                }
+              }
+            }
+          })
+
+          //przesuwanie
+          counter++
+          startWeek.setDate(startWeek.getDate() + 1);
+        }
+      }
+      catch(error){
+        console.log(error);
+      }
+      break;
+    }
+    try{
+      const timetable = await client.calendar.getTimetable(formatDateTimetable(startWeek), formatDateTimetable(endWeek));
+      timetable.forEach((day) => {
+        day.forEach((lesson)=>{
+          //czy jest lekcja o tej godzinie
+          if(lesson != null)
+          {
+            //czy sie odbyla
+            if(lesson.active)
+            {
+              if(lesson.name in subjects)
+              {
+                subjects[lesson.name]++;
+              }
+              else
+              {
+                subjects[lesson.name] = 1;
+              }
+            }
+          }
+        })
+      })
+    }
+    catch(error){
+    }
+
+
+    //console.log(formatDateTimetable(startWeek)+ "  " + formatDateTimetable(endWeek))
+    //dodawanie tygodnia
+    startWeek.setDate(startWeek.getDate() + 7);
+    endWeek.setDate(endWeek.getDate() + 7);
+  }
+  return subjects;
+}
+
 const handleApiGrades = async () => {
   const subjects = await client.homework.listSubjects();
   const tab = [];
@@ -281,4 +409,12 @@ const handleApiGrades = async () => {
   //console.log(tab);
   return tab;
 };
+
+const formatDateTimetable = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const formattedDate = `${year}-${month}-${day}`;
+  return formattedDate;
+}
 //? ======= END Handle for routes =======
