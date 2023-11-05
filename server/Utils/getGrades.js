@@ -17,9 +17,11 @@ function getGrades(client) {
                 }
             }
 
+            const [previous, corrected] = $(grade).trim().replaceAll(/[\[\]]/g, '').trim().split('\n')
             const flag_map = {
                 Id: $(grade).find("a").attr("href").split("/").at(-1),
-                Ocena: $(grade).trim(),
+                Ocena: corrected ? corrected.trim() : previous.trim(),
+                Poprzednia: corrected ? previous.trim() : null,
                 Przedmiot: subject
             }
 
@@ -36,7 +38,7 @@ function getGrades(client) {
         }
 
         const semester = (columns, start, subject, skip_average = false) => {
-            const grades = $(columns[start]).find("span").map((_, e) => dissect_grade(e, subject)).get()
+            const grades = $(columns[start]).find("> span").map((_, e) => dissect_grade(e, subject)).get()
             const average = $(columns[start + 1]).trim()
             const final = $(columns[start + 2]).trim()
 

@@ -78,111 +78,143 @@ app.post('/user/auth/logut', (req, res) =>
 
 //@ Endpoints
 app.post('/notifications/today', (req, res) => {
- client.authorize(req.UserLogin, req.UserPassword).then(()=>{
-  return Promise.all([
-    getCommonNotifications(client),
-    getGradeNotifications(client)
-  ]).then(([common, grade]) => {
-    res.status(201).json({
-      status: "success",
-      data: common.concat(grade)
+  client.authorize(req.body.UserLogin, req.body.UserPassword).then(() => {
+    return Promise.all([
+      getCommonNotifications(client),
+      getGradeNotifications(client)
+    ]).then(([common, grade]) => {
+      res.status(201).json({
+        status: "success",
+        data: common.concat(grade)
+      })
+    })
+  }, () => {
+    res.status(401).json({
+      status: "error",
+      data: "Nie mogliśmy pobrać danych :("
     })
   })
  })
 })
 
 app.post('/notifications/tomorrow', (req, res) => {
-  return Promise.all([
-    getCommonNotifications(client),
-    getGradeNotifications(client),
-    getMiscNotifications(client)
-  ]).then(([common, grade, misc]) => {
-    res.status(201).json({
-      status: "success",
-      data: common.concat(grade).concat(misc)
+  client.authorize(req.body.UserLogin, req.body.UserPassword).then(() => {
+    return Promise.all([
+      getCommonNotifications(client),
+      getGradeNotifications(client),
+      getMiscNotifications(client)
+    ]).then(([common, grade, misc]) => {
+      res.status(201).json({
+        status: "success",
+        data: common.concat(grade).concat(misc)
+      })
+    })
+  }, () => {
+    res.status(401).json({
+      status: "error",
+      data: "Nie mogliśmy pobrać danych :("
     })
   })
 })
 
 app.post('/timetable/today', (req, res) => {
-  client.authorize(req.UserLogin, req.UserPassword).then(()=>{
+  client.authorize(req.body.UserLogin, req.body.UserPassword).then(() => {
     const today = new Date()
+
     const {
       monday,
       sunday
     } = weekOfDay(today)
-  
     return Promise.all([
       client.calendar.getTimetable(monday, sunday),
       getLessonNotifications(formatDay(today), client)
     ]).then(([timetable, notifications]) => {
       const table = timetable[(today.getDay() + 6) % 7]
-  
       for (let i = 0; i < table.length; i++) {
         if (table[i]) {
           table[i].notifications = notifications[i]
         }
       }
-  
       res.status(201).json({
         status: "success",
         data: table
       })
     })
+  }, () => {
+    res.status(401).json({
+      status: "error",
+      data: "Nie mogliśmy pobrać danych :("
+    })
   })
 })
 
 app.post('/timetable/tomorrow', (req, res) => {
-  const tomorrow = new Date()
-  const day_number = (tomorrow.getDay() + 6) % 7
+  client.authorize(req.body.UserLogin, req.body.UserPassword).then(() => {
+    const tomorrow = new Date()
+    const day_number = (tomorrow.getDay() + 6) % 7
 
-  if (day_number <= 3) { // monday - thursday
-    tomorrow.setDate(tomorrow.getDate() + 1)
-  }
-  else { // friday, saturday, sunday
-    tomorrow.setDate(tomorrow.getDate() + 7 - day_number)
-  }
+    if (day_number <= 3) { // monday - thursday
+      tomorrow.setDate(tomorrow.getDate() + 1)
+    }
+    else { // friday, saturday, sunday
+      tomorrow.setDate(tomorrow.getDate() + 7 - day_number)
+    }
 
-  const {
-    monday, sunday
-  } = weekOfDay(tomorrow)
+    const {
+      monday, sunday
+    } = weekOfDay(tomorrow)
 
-  client.calendar.getTimetable(monday, sunday).then(data => {
-    const table = data[(tomorrow.getDay() + 6) % 7]
-    
-    res.status(201).json({
-      status: "success",
-      start: table.find(e => e).from,
-      end: table.reverse().find(e => e).to,
-      data: table
+    client.calendar.getTimetable(monday, sunday).then(data => {
+      const table = data[(tomorrow.getDay() + 6) % 7]
+
+      res.status(201).json({
+        status: "success",
+        data: {
+          start: table.find(e => e).from,
+          end: table.reverse().find(e => e).to,
+          table
+        }
+      })
+    })
+  }, () => {
+    res.status(401).json({
+      status: "error",
+      data: "Nie mogliśmy pobrać danych :("
     })
   })
 })
 
 app.post('/timetable/pack', (req, res) => {
-  const tomorrow = new Date()
-  const day_number = (tomorrow.getDay() + 6) % 7
+  client.authorize(req.body.UserLogin, req.body.UserPassword).then(() => {
+    const tomorrow = new Date()
+    const day_number = (tomorrow.getDay() + 6) % 7
 
-  if (day_number <= 3) { // monday - thursday
-    tomorrow.setDate(tomorrow.getDate() + 1)
-  }
-  else { // friday, saturday, sunday
-    tomorrow.setDate(tomorrow.getDate() + 7 - day_number)
-  }
+    if (day_number <= 3) { // monday - thursday
+      tomorrow.setDate(tomorrow.getDate() + 1)
+    }
+    else { // friday, saturday, sunday
+      tomorrow.setDate(tomorrow.getDate() + 7 - day_number)
+    }
 
-  const {
-    monday, sunday
-  } = weekOfDay(tomorrow)
+    const {
+      monday, sunday
+    } = weekOfDay(tomorrow)
 
-  client.calendar.getTimetable(monday, sunday).then(data => {
-    const table = data[(tomorrow.getDay() + 6) % 7].filter(e => e)
+    client.calendar.getTimetable(monday, sunday).then(data => {
+      const table = data[(tomorrow.getDay() + 6) % 7].filter(e => e)
 
-    res.status(201).json({
-      status: "success",
-      data: {
-        count: table.length,
-        classes: table.filter(e => e.name !== 'Okienko').map(e => e.name).filter((e, i, a) => a.indexOf(e) === i)
-      }
+      res.status(201).json({
+        status: "success",
+        data: {
+          count: table.length,
+          classes: table.filter(e => e.name !== 'Okienko').map(e => e.name).filter((e, i, a) => a.indexOf(e) === i)
+        }
+      })
+    })
+  }, () => {
+    res.status(401).json({
+      status: "error",
+      data: "Nie mogliśmy pobrać danych :("
     })
   })
 })
