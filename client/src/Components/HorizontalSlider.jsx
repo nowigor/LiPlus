@@ -1,32 +1,70 @@
-import {useState, React} from "react";
-import { Swiper, SwiperSlide, } from 'swiper/react';
-import { Virtual } from 'swiper/modules';
-import "../Styles/HorizontalSlider.css"
-import 'swiper/css';
+import { React, useState } from "react";
+import { Swiper, SwiperSlide } from 'swiper/react'
+import 'swiper/css'
+import '../Styles/HorizontalSlider.css'
 
-const HorizontalSlider = () =>
-{
-    const [centeredSlide, setCenteredSlide] = useState(0);
-    const slides = Array.from({ length: 10}).map(
-      (el, index) => `${index + 1}`
-    );
-    const handleSlideChange = (swiper) => {
-        setCenteredSlide(swiper.realIndex +1);
-        // console.log(centeredSlide);
-        console.log(swiper)
-        // Add your custom logic here for the centered slide
-      };
+export default function HorizontalSlider({options, setValue}) {
+  const [progress, setProgress] = useState(0)
+  options = Array.from({ length: 9 }, (_, i) => i + 1)
+  setValue = a => { }
+
+  const set = v => {
+    setProgress(v)
+    setValue(Math.floor(v))
+  }
+
+  const index = progress => {
+    progress *= options.length - 1
+    
+    if (progress < 0) set(0)
+    else if (progress >= options.length) set(options.length - 1)
+    else set(progress)
+  }
+
+  const _gradient = i => {
+    const d = Math.abs(progress - i)
+    console.log(`gradient(${i + 1})=${d} | ${Math.floor(progress)}`)
+    return d >= 1 ? -1 : d
+  }
+
+  const _color_gradient = d => {
+    const base = {
+      r: 0,
+      g: 0,
+      b: 0
+    }
+
+    if (d === -1) {
+      return `rgb(${base.r}, ${base.g}, ${base.b})`
+    } else {
+      const r = 32 - (32 - base.r) * d
+      const g = 124 - (124 - base.g) * d
+      const b = 231 - (231 - base.b) * d
+      return `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`
+    }
+  }
+
   return (
-    <Swiper modules={[Virtual]} spaceBetween={50} slidesPerView={3} virtual onSlideChange={handleSlideChange} scrollbar={{ draggable: true }} className="horizontal-slider-wrapper">
-      {slides.map((slideContent, index) => (
-        <SwiperSlide key={slideContent} virtualIndex={index}>
-        <div className={`slider-item ${centeredSlide === index  ? 'selected' : ''}`} >
-        {slideContent}
-        </div>
-          
-        </SwiperSlide>
-      ))}
+    <Swiper
+      slidesPerView='auto'
+      centeredSlides={true}
+      onProgress={(e, p) => index(p)}
+    >
+      {
+        options.map((e, i) => {
+          return <SwiperSlide
+            key={i}
+            style={{
+              opacity: 1 - 0.2 * Math.abs(progress - i),
+              color: `${Math.floor(progress) === i ? 'rgb(32, 124, 231)' : 'black'}`,
+              fontWeight: `${Math.floor(progress) === i ? 'bold' : 'normal'}`,
+            }}
+          >
+            {e}
+          </SwiperSlide>
+        })
+      }
     </Swiper>
-    )
+  )
 }
-export default HorizontalSlider
+
