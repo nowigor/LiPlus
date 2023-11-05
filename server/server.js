@@ -197,7 +197,7 @@ app.post('/test', (req, res) => {
   // client.calendar.getTimetable("2023-10-23", "2023-10-29").then((data) => {
   //   res.status(200).json(data);
   // });
-  countSubjects().then((data) => {
+  countAbsenceSubject().then((data) => {
     res.status(200).json(data);
   });
 });
@@ -306,8 +306,14 @@ const countSubjects = async () => {
       console.log("koniec roku")
       break;
     }
-    //jezeli jest w tym tyogdniu today
-    if (today >= startWeek && today <= endWeek) {
+    // console.log(startWeek.getTime() + " -- " + endWeek.getTime())
+    // console.log(today.getTime())
+    // //jezeli jest w tym tyogdniu today
+    // if ((today.getTime() >= startWeek.getTime() && today.getTime() <= endWeek.getTime()) || today.toDateString() == endWeek.toDateString() || today.toDateString() == startWeek.toDateString()) {
+    //   console.log(startWeek.toDateString() + " -- " + endWeek.toDateString())
+    //   console.log(today)
+    // }
+    if ((today >= startWeek && today <= endWeek)|| today.toDateString() == endWeek.toDateString() || today.toDateString() == startWeek.toDateString()) {
       console.log("Ostatni tydzień");
       try{
         const timetable = await client.calendar.getTimetable(formatDateTimetable(startWeek), formatDateTimetable(endWeek));
@@ -387,6 +393,8 @@ const countSubjects = async () => {
 
 const handleApiGrades = async () => {
   const subjects = await client.homework.listSubjects();
+  const percent = await countAbsenceSubject();
+
   const tab = [];
 
   let counter = 0;
@@ -397,13 +405,20 @@ const handleApiGrades = async () => {
     element.grades = grades;
     if(grades)
     {
-      element.avg = avg(grades);
+      if(avg(grades))
+      {
+        element.avg = avg(grades).toFixed(2);
+      }
+      else
+      {
+        element.avg = avg(grades);
+      }
     }
     else
     {
-      element.avg = null;
+      element.average = null;
     }
-    element.attendance = 47;
+    element.attendance = percent[subject.name]
     tab.push(element);
   }
   //console.log(tab);
@@ -416,5 +431,58 @@ const formatDateTimetable = (date) => {
   const day = String(date.getDate()).padStart(2, '0');
   const formattedDate = `${year}-${month}-${day}`;
   return formattedDate;
+}
+
+const countAbsenceSubject = async () => {
+  let subjects = await countSubjects();
+  const absences = await client.absence.getAbsences();
+  const now = new Date();
+  let tab = [];
+  
+  absences["0"].forEach(element => {
+    if(element.date != null)
+    {
+      element.table.forEach(element1 => {
+        if(element1 != null)
+        {
+          tab.push(element1.id);
+          // const absence = await client.absence.getAbsence(element.id);
+        }
+        
+      });
+    };
+  });
+  let tabAbsence = {}
+  for(let i = 0; i < tab.length; i++)
+  {
+    
+    const absence = await client.absence.getAbsence(tab[i]);
+    const count = subjects[absence.subject];
+    if(absence.type == "nieobecność uspr." || absence.type == "nieobecność" )
+    {
+      if(absence.subject in tabAbsence)
+      {
+        tabAbsence[absence.subject]++;
+      }
+      else
+      {
+        tabAbsence[absence.subject] = 1;
+      }
+    }
+  }
+
+
+  for (const subject in subjects) {
+    if(subject in tabAbsence)
+    {
+      subjects[subject] = Math.round(((subjects[subject] - tabAbsence[subject])/subjects[subject]) * 100);
+    }
+    else
+    {
+      subjects[subject] = 100;
+    }
+  }
+
+  return subjects
 }
 //? ======= END Handle for routes =======
