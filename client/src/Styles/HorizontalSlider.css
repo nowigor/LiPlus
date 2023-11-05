@@ -1,11 +1,19 @@
-.horizontal-slider-wrapper
-{
-    width: 50%;
-    font-size: 24px;
-    background-color: rgb(227, 227, 233);
-   
+.swiper {
+    width: 100%;
+    height: 55px;
 }
-.selected
-{
-    color: green;
+
+.swiper-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.swiper-slide {    
+    font-size: 40px;
+    font-weight: normal;
+    height: 45px;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: end;
 }
