@@ -1,0 +1,11 @@
+.horizontal-slider-wrapper
+{
+    width: 50%;
+    font-size: 24px;
+    background-color: rgb(227, 227, 233);
+   
+}
+.selected
+{
+    color: green;
+}
