@@ -94,7 +94,6 @@ app.post('/notifications/today', (req, res) => {
       data: "Nie mogliśmy pobrać danych :("
     })
   })
- })
 })
 
 app.post('/notifications/tomorrow', (req, res) => {
