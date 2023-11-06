@@ -144,7 +144,7 @@ export default function TimeTableToday() {
     },
     notif: e => {
       return {
-        boxShadow: `${isPast(e.from, now) && !isPast(e.to, now) ? '0px 4px 4px rgba(0, 0, 0, 0.25)' : ''}`,
+        boxShadow: `${!isPast(e.to, now) ? '0px 4px 4px rgba(0, 0, 0, 0.25)' : ''}`,
       }
     },
     notif_image: e => {
