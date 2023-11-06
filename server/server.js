@@ -28,13 +28,42 @@ app.listen(PORT, () => {
 const client = new Librus();
 client.calendar.getTimetable = (start, end) => getTimetable(start, end, client)
 client.calendar.getEvent = (id, title) => getEvent(id, title, client)
-client._request = (method, apiFunction, data, _) => _request(method, apiFunction, data, client.caller)
+client._request = (method, apiFunction, data, _) => _request(method, apiFunction, data, client)
+client.user = {
+  login: "8419319u",
+  password: "igor)*@hgux;la()@#U%$_./zd-9s*5,mxz-03ay5908"
+}
+
+client.authorize(client.user.login, client.user.password).then(() => {
+  const today = new Date("2023-11-10")
+
+  const {
+    monday,
+    sunday
+  } = weekOfDay(today)
+  return Promise.all([
+    client.calendar.getTimetable(monday, sunday),
+    getLessonNotifications(formatDay(today), client)
+  ]).then(([timetable, notifications]) => {
+    const table = timetable[(today.getDay() + 6) % 7]
+    for (let i = 0; i < table.length; i++) {
+      if (table[i]) {
+        table[i].notifications = notifications[i]
+      }
+    }
+    console.log(table)
+  })
+})
 
 
 //@ User authentication
 const authenticate = (res, user) => {
   client.authorize(user.login, user.password).then(result => {
     if (result) {
+      client.user = {
+        login: user.login,
+        password: user.password,
+      }
       return res.status(201).json({
         status: "success",
         data: "Zalogowano"
