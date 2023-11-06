@@ -76,6 +76,8 @@ function getMiscNotifications(client) {
         client.calendar.getTimetable(monday, sunday),
         client.calendar.getTimetable(next_monday, next_sunday)
     ]).then(([prev_week, this_week, next_week]) => {
+        if (!prev_week || !this_week || !next_week) return null
+
         const length = this_week[(today.getDay() + 6) % 7].length
         const day_number = (today.getDay() + 6) % 7
 
@@ -145,6 +147,8 @@ function getMiscNotifications(client) {
 
 function getGradeNotifications(client) {
     return getGrades(client).then(data => {
+        if (!data) return null
+
         let grades = Object.values(data).reduce((all, e) => {
             all.push(...e.semester1.grades, ...e.semester2.grades)
             return all

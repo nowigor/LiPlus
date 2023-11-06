@@ -29,32 +29,6 @@ const client = new Librus();
 client.calendar.getTimetable = (start, end) => getTimetable(start, end, client)
 client.calendar.getEvent = (id, title) => getEvent(id, title, client)
 client._request = (method, apiFunction, data, _) => _request(method, apiFunction, data, client)
-client.user = {
-  login: "8419319u",
-  password: "igor)*@hgux;la()@#U%$_./zd-9s*5,mxz-03ay5908"
-}
-
-client.authorize(client.user.login, client.user.password).then(() => {
-  const today = new Date("2023-11-10")
-
-  const {
-    monday,
-    sunday
-  } = weekOfDay(today)
-  return Promise.all([
-    client.calendar.getTimetable(monday, sunday),
-    getLessonNotifications(formatDay(today), client)
-  ]).then(([timetable, notifications]) => {
-    const table = timetable[(today.getDay() + 6) % 7]
-    for (let i = 0; i < table.length; i++) {
-      if (table[i]) {
-        table[i].notifications = notifications[i]
-      }
-    }
-    console.log(table)
-  })
-})
-
 
 //@ User authentication
 const authenticate = (res, user) => {
@@ -112,6 +86,13 @@ app.post('/notifications/today', (req, res) => {
       getCommonNotifications(client),
       getGradeNotifications(client)
     ]).then(([common, grade]) => {
+      if (!grade) {
+        res.status(401).json({
+          status: "error",
+          data: "Nie mogliśmy pobrać danych :("
+        })
+      }
+
       res.status(201).json({
         status: "success",
         data: common.concat(grade)
@@ -132,6 +113,13 @@ app.post('/notifications/tomorrow', (req, res) => {
       getGradeNotifications(client),
       getMiscNotifications(client)
     ]).then(([common, grade, misc]) => {
+      if (!grade) {
+        res.status(401).json({
+          status: "error",
+          data: "Nie mogliśmy pobrać danych :("
+        })
+      }
+
       res.status(201).json({
         status: "success",
         data: common.concat(grade).concat(misc)
@@ -148,15 +136,22 @@ app.post('/notifications/tomorrow', (req, res) => {
 app.post('/timetable/today', (req, res) => {
   client.authorize(req.body.UserLogin, req.body.UserPassword).then(() => {
     const today = new Date()
-
     const {
       monday,
       sunday
     } = weekOfDay(today)
+
     return Promise.all([
       client.calendar.getTimetable(monday, sunday),
       getLessonNotifications(formatDay(today), client)
     ]).then(([timetable, notifications]) => {
+      if (!timetable) {
+        res.status(401).json({
+          status: "error",
+          data: "Nie mogliśmy pobrać danych :("
+        })
+      }
+
       const table = timetable[(today.getDay() + 6) % 7]
       for (let i = 0; i < table.length; i++) {
         if (table[i]) {
@@ -193,6 +188,13 @@ app.post('/timetable/tomorrow', (req, res) => {
     } = weekOfDay(tomorrow)
 
     client.calendar.getTimetable(monday, sunday).then(data => {
+      if (!data) {
+        res.status(401).json({
+          status: "error",
+          data: "Nie mogliśmy pobrać danych :("
+        })
+      }
+
       const table = data[(tomorrow.getDay() + 6) % 7]
 
       res.status(201).json({
@@ -229,6 +231,13 @@ app.post('/timetable/pack', (req, res) => {
     } = weekOfDay(tomorrow)
 
     client.calendar.getTimetable(monday, sunday).then(data => {
+      if (!data) {
+        res.status(401).json({
+          status: "error",
+          data: "Nie mogliśmy pobrać danych :("
+        })
+      }
+
       const table = data[(tomorrow.getDay() + 6) % 7].filter(e => e)
 
       res.status(201).json({
