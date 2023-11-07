@@ -98,10 +98,8 @@ input::placeholder
 
 .login
 {
-    margin-top: 20px;
     background-image: url('../Includes/icons/user/user-icon.svg');
     background-size: 25px;
-
 }
 .password
 {

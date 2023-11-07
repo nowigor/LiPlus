@@ -72,7 +72,7 @@ const Login = ({authorized}) =>
                 <h1><b>Witaj w LiPlus</b></h1>
             </div>
             <article className='form-wrapper shadow'>
-                <input type="text" ref={UserLogin} className='input login shadow' placeholder='Nazwa użytkownika*'></input>
+                <input type="text" ref={UserLogin} className='input login shadow' placeholder='Nazwa użytkownika*' name="login"></input>
                 <input type="password" ref={UserPassword} className='input password shadow' placeholder='Hasło*'></input>
                 <button onClick={HandleLogin} className='button shadow'>Zaloguj</button>
                 <div className="utlis-wrapper">
