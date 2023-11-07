@@ -3,6 +3,9 @@ import "../Styles/Grade.css"
 import { AttendanceIcon } from "./Icons/AttendanceIcon"
 
 export function Grade({id, name, grades, absence, average}) {
+    console.log({id, name, grades, absence, average});
+    const maxLength = 17;
+    name = name.slice(0, maxLength);
     const pastelColors = [
         "#d882e7", "#d5a8c1", "#c3a8d9", "#98d4bb", "#c2de71", "#ffce7b", "#f5b041", "#c4c981", "#92a3b0", "#d1b37f",
         "#b994d2", "#78ddce", "#b6c46e", "#cca0d0", "#df92b1", "#c9d696", "#c4c394", "#fbb170", "#e8997d", "#ce7d74",
@@ -28,6 +31,7 @@ export function Grade({id, name, grades, absence, average}) {
         <section className="grades-box" style={{ backgroundColor }}>
             <div className="grid-item-1">
                 <div className="attendance"  style={{color: fontColor}}>
+                    {console.log(absence)}
                     {absence}%
                     <span className="line-hv" style={{ backgroundColor: fontColor }}></span>
                     <AttendanceIcon fillColor={fontColor}/>
@@ -36,17 +40,18 @@ export function Grade({id, name, grades, absence, average}) {
             <div className="grid-item-2">
                 <div className="subject-name">{name}</div>
                 <div className="grades-wp">
-                    {grades.map(e =>{
-                        return(
-                            e + " "
-                        )
-                    })
-                }
+                {grades && grades.length > 0 ? (
+                    grades.map(e => (
+                    e + " "
+                    ))
+                ) : (
+                    <span>No grades available</span>
+                )}
                 </div>
             </div>
             <div className="grid-item-3">
                 <div className="average">
-                    {average } 
+                {average !== null ? average : "0.00"}
                 </div>
             </div>
         </section>
