@@ -4,6 +4,10 @@
 
 LiPlus to innowacyjny projekt, który integruje się z systemem edukacyjnym Librus, mający na celu usprawnienie zarządzania codziennym życiem szkolnym uczniów. LiPlus to zaawansowane API oraz platforma internetowa oparta na technologii React, umożliwiająca szybki dostęp do kluczowych informacji związanych z frekwencją, ocenami oraz planem zajęć szkolnych.
 
+## Podgląd
+
+- [Zobacz projekt w Figma](https://www.figma.com/file/c7P9EL6f9GSOMxJxgzP7zt/LiPlus?type=design&node-id=0-1&mode=design)
+
 ### Funkcje LiPlus:
 
 1. **Podstawowe Dane:**
