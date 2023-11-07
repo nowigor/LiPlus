@@ -9,6 +9,7 @@ import TimeTableToday from "../TimeTableToday";
 const HomeScreen = () => {
   useEffect(() => {
     getNotifcationsToday();
+    console.log(localStorage)
 
   }, [])
   const [notifications, setNotifications] = useState([]);
