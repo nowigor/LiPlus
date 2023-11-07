@@ -17,15 +17,24 @@ const AttendaceScreen = () => {
     }
 
     useEffect(() => {
-        getNotifcationsToday();
-    
+        getNotifcationsToday()
       }, [])
-      const [notifications, setNotifications] = useState([]);
+      const [counters, setCounters] = useState([]);
       const getNotifcationsToday = async () => {
         try {
-          const response = await axios.post(consts.preURL + '/');
-          setNotifications(response.data.data);
+          const apiUrl = 'http://localhost:3030/api/attendance';
+
+          const requestBody = {
+            startDate: '2023-09-01',
+            endDate: '2023-11-05',
+          };
+
+        const response = await axios.post(apiUrl, requestBody);
+
+        setCounters(response.data.counters);
+        console.log(response.data);
         } catch (error) {
+          console.log(error);
         }
       }
 
@@ -33,7 +42,10 @@ const AttendaceScreen = () => {
         <section className="grades-attendance-wrapper">
             <ScreenSwitch options={["Oceny", "Frekwencja"]} active={active} setActive={setActive} onClick={onClick}/>
             <section className="grades-attendance-box-wrapper">
-                <Counts/>
+              {counters !== null && 
+                <Counts counters={counters}/>
+                
+              }
             </section>
         </section>
     )

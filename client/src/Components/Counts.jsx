@@ -1,12 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import "../Styles/Counts.css"
 
-const Counts = () =>{
-    
+const Counts = ({counters}) => {
     return (
         <section className="grades-box">
-            CountsScreen
+            {/* {console.log(counters)} */}
+           {counters.map(element => {
+            return (
+                <div>{element.type + " " + element.count}</div>
+            )
+           })}
         </section>
     )
 }
-export default Counts
+
+export default Counts;
