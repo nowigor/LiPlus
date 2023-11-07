@@ -3,7 +3,6 @@ const cheerio = require('cheerio');
 const getTimetable = (from, to, client) => {
   const parser = data => {
     const $ = cheerio.load(data)
-
     const html_table = $('table.decorated.plan-lekcji')
     if (!html_table.length) {
       return null
