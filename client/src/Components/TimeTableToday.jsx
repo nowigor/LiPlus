@@ -36,7 +36,7 @@ export default function TimeTableToday() {
     },
     {
       name: 'Język Polski',
-      teacher: 'Joanna Biela von SS-Mann in der Deutsche Armee',
+      teacher: 'Joanna Biela',
       room: '105',
       from: '9:40',
       to: '10:25',
