@@ -568,11 +568,11 @@ const handleApiGrades = async () => {
     {
       if(avg(grades))
       {
-        element.avg = avg(grades).toFixed(2);
+        element.average = avg(grades).toFixed(2);
       }
       else
       {
-        element.avg = avg(grades);
+        element.average = avg(grades);
       }
     }
     else
