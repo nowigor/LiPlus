@@ -1,53 +1,61 @@
-# Projekt LiPlus: Automatyzacja Domu i Szkoły
+# LiPlus - Readme
 
-## Opis
+## Spis Treści
 
-LiPlus to innowacyjny projekt, który integruje się z systemem edukacyjnym Librus, mający na celu usprawnienie zarządzania codziennym życiem szkolnym uczniów. LiPlus to zaawansowane API oraz platforma internetowa oparta na technologii React, umożliwiająca szybki dostęp do kluczowych informacji związanych z frekwencją, ocenami oraz planem zajęć szkolnych.
+1. [Wprowadzenie](#wprowadzenie)
+2. [Uruchomienie](#uruchomienie)
+3. [Technologie](#technologie)
+4. [Instrukcja Użycia](#instrukcja-użycia)
+5. [Licencja](#licencja)
+6. [Status Projektu](#status-projektu)
+7. [Informacje o Defektach](#informacje-o-defektach)
+8. [Autorzy](#autorzy)
 
-### Funkcje LiPlus:
+## Wprowadzenie
 
-1. **Podstawowe Dane:**
+LiPlus to aplikacja stworzona jako alternatywa dla dziennika Librus, oferująca większą elastyczność i rozszerzoną funkcjonalność. Celem projektu jest zapewnienie użytkownikom bardziej intuicyjnego interfejsu oraz dodatkowych opcji, aby ułatwić zarządzanie szkolnymi obowiązkami.
 
-   - Wyświetlanie frekwencji ucznia.
-   - Prezentacja ocen z poszczególnych przedmiotów.
-   - Średnia ocen do tej pory z każdego przedmiotu.
+## Uruchomienie
 
-2. **Analiza Ocen:**
+### Wymagania Sprzętowe
 
-   - Zestawienie elementów do poprawy na podstawie otrzymanych ocen.
-   - Treść sprawdzianów/kartkówek, przedmiot, data wpisu oceny oraz pozostały czas na poprawę oceny.
+- Komputer lub telefon z dostępem do internetu
+- Przeglądarka internetowa (np. Google Chrome, Mozilla Firefox, Safari)
 
-3. **Konfiguracja Przypomnień:**
+### Instalacja
 
-   - Ustawienie progu oceny, od którego mają być generowane przypomnienia o konieczności poprawy.
-   - Przypomnienia o poprawie ocen oraz ile czasu pozostało na ich poprawienie.
+1. Sklonuj repozytorium LiPlus.
+2. Upewnij się, że masz zainstalowane środowisko Node.js.
+3. Otwórz terminal w katalogu projektu.
+4. Uruchom polecenie `npm install` w terminalu, aby zainstalować wszystkie wymagane zależności.
+5. Po zakończeniu instalacji, uruchom aplikację za pomocą polecenia `npm start`.
 
-4. **Plan Zajęć:**
+## Technologie
 
-   - Monitorowanie liczby godzin danego przedmiotu w danym tygodniu.
+- Node.js
+- React.js
+- JavaScript
+- HTML
+- CSS
+- Figma
 
-5. **Przygotowanie na Następny Dzień:**
+## Instrukcja Użycia
 
-   - Sugestie dotyczące tego, co należy spakować na kolejny dzień szkolny.
+Aplikacja jest bardzo intuicyjna w użyciu. Po uprzednim zalogowaniu, użytkownik zostanie przekierowany na ekran domyślny. Na dolnym pasku dostępne są inne funkcje aplikacji, równie proste w użyciu.
 
-6. **Przypomnienia o Posiłkach i Wf:**
+![Home Screen](homescreen.png)
 
-   - Przypomnienia o konieczności przygotowania śniadania na dni z długim programem.
-   - Wskazówki dotyczące zabrania stroju na zajęcia wychowania fizycznego.
-   - Przypomnienia o konieczności przygotowania śniadania na dni z długim programem.
-   - Wskazówki dotyczące zabrania stroju na zajęcia wychowania fizycznego.
+## Licencja
 
-7. **Dbanie o Stroje:**
+W przypadku chęci użycia jakichkolwiek własności intelektualnych z tego projektu, należy uprzednio zkontaktować się mailowo: igornowak10@gmail.com
 
-   - Przypomnienia o konieczności wyprania stroju, jeśli mieliśmy zajęcia wychowania fizycznego.
+## Status Projektu
 
-8. Licznik Dni Szkolnych:
+Aktualnie projekt jest w fazie rozwoju. Planowane są dalsze zmiany i ulepszenia, aby zapewnić jeszcze lepsze doświadczenie użytkownika.
 
-- Obliczanie ilości pozostałych dni szkolnych do końca roku.
+## Informacje o Defektach
 
-9. Ostrzeżenia i Przypomnienia:
-
-- Ostrzeżenia przed zbliżającymi się kartkówkami, sprawdzianami, pracami domowymi itp.
+Brak znanych defektów w tej chwili. Wszelkie znalezione błędy prosimy zgłaszać na stronie GitHub projektu.
 
 ## Autorzy
 
