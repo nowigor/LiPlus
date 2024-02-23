@@ -43,7 +43,7 @@ LiPlus to aplikacja stworzona jako alternatywa dla dziennika Librus, oferująca 
 
 Aplikacja jest bardzo intuicyjna w użyciu. Po uprzednim zalogowaniu, użytkownik zostanie przekierowany na ekran domyślny. Na dolnym pasku dostępne są inne funkcje aplikacji, równie proste w użyciu.
 
-![Home Screen](homescreen.png)
+<img src="homescreen.png" width=250px>
 
 ## Licencja
 
